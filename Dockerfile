@@ -4,7 +4,7 @@ WORKDIR /build
 
 COPY pom.xml ./
 
-COPY src/ ./src
+COPY src ./src
 
 RUN mvn clean install -DskipTests
 
