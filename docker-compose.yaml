@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql
+    container_name: e-bake-ingredients-db
+    volumes:
+      - data:/var/lib/mysql
+    env_file:
+      - db.env
+    ports:
+      - "3306:3306"
+
+  mail:
+    image: maildev/maildev
+    container_name: e-bake-ingredients-mail
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+volumes:
+  data:
