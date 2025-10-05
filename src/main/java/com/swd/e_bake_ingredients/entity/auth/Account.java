@@ -22,7 +22,7 @@ public class Account {
 
     private AccountProvider provider;
 
-    private AccountDetail detail;
+    private AccountProfile detail;
 
     private boolean isActivate;
 }

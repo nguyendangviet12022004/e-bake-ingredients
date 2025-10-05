@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountDetail {
+public class AccountProfile {
     private String phoneNumber;
     private boolean gender;
     private String firstName;
