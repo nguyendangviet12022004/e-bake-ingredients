@@ -1,7 +1,9 @@
 package com.swd.e_bake_ingredients.entity.media;
 
-import com.swd.e_bake_ingredients.entity.product.Product;
+import com.swd.e_bake_ingredients.entity.product.ProductVariant;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 
 import lombok.Getter;
@@ -14,6 +16,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@Entity
 public class ProductImage extends Image {
-    private Product product;
+    @ManyToOne
+    private ProductVariant productVariant;
 }

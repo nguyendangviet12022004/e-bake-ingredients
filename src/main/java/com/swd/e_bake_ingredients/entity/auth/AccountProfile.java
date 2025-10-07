@@ -2,10 +2,13 @@ package com.swd.e_bake_ingredients.entity.auth;
 
 import java.time.LocalDate;
 
+import com.swd.e_bake_ingredients.entity.media.ProfileImage;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +33,7 @@ public class AccountProfile {
     private String lastName;
 
     private LocalDate dob;
+
+    @OneToOne
+    private ProfileImage profileImage;
 }
