@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.swd.e_bake_ingredients.entity.media.ProductImage;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

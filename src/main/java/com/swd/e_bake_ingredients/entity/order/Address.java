@@ -2,7 +2,6 @@ package com.swd.e_bake_ingredients.entity.order;
 
 import com.swd.e_bake_ingredients.entity.auth.Customer;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
