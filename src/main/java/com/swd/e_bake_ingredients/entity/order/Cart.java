@@ -22,6 +22,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany
-    private List<Item> itmes;
+    @OneToMany(mappedBy = "cart")
+    private List<Item> items;
 }

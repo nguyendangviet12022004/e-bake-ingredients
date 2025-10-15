@@ -31,9 +31,12 @@ public class Order {
     @ManyToOne
     private Customer customer;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private List<Item> items;
 
     @OneToOne
-    private Delivery transport;
+    private Delivery delivery;
+
+    @OneToOne
+    private Payment payment;
 }

@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 public class Customer extends Account {
-    @OneToMany
+    @OneToMany(mappedBy = "customer")
     private List<Address> addresses;
 
     @OneToOne

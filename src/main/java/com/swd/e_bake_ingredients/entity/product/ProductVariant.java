@@ -31,12 +31,15 @@ public class ProductVariant {
     private int stock;
 
     @ManyToOne
+    private Product product;
+
+    @ManyToOne
     private Unit unit;
 
     private double unitPrice;
 
     private double discount;
 
-    @OneToMany
+    @OneToMany(mappedBy = "productVariant")
     List<ProductImage> images;
 }

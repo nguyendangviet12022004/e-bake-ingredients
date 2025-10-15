@@ -25,6 +25,12 @@ public class Item {
     @ManyToOne
     private ProductVariant productVariant;
 
+    @ManyToOne
+    private Cart cart;
+
+    @ManyToOne
+    private Order order;
+
     private int quantity;
 
     private double price;

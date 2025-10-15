@@ -1,12 +1,14 @@
 package com.swd.e_bake_ingredients.entity.product;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,9 +31,13 @@ public class Product {
 
     @ManyToOne
     private Brand brand;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductVariant> variants;
 
     private double vote;
 }

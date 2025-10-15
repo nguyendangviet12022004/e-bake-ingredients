@@ -25,6 +25,4 @@ public class Category {
     @ManyToOne
     private Category parrent;
 
-    // @OneToMany
-    // private List<Category> children;
 }
