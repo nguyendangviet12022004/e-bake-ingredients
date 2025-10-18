@@ -3,7 +3,10 @@ package com.swd.e_bake_ingredients.entity.product;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.swd.e_bake_ingredients.entity.media.ProductImage;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,8 +39,19 @@ public class Product {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductVariant> variants;
-
     private double vote;
+
+    @ManyToOne
+    private Unit unit;
+
+    private double unitPrice;
+
+    private double discount;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    List<ProductImage> images;
+
+    private int stock;
+
+    private double price;
 }

@@ -25,4 +25,6 @@ public class Image {
 
     private String src;
 
+    private String altText;
+
 }

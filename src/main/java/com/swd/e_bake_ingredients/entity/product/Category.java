@@ -1,10 +1,13 @@
 package com.swd.e_bake_ingredients.entity.product;
 
+import com.swd.e_bake_ingredients.entity.media.CategoryImage;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +25,6 @@ public class Category {
     private String name;
     private String description;
 
-    @ManyToOne
-    private Category parrent;
-
+    @OneToOne
+    private CategoryImage image;
 }

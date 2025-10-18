@@ -36,7 +36,7 @@ public class Account {
     private AccountProvider provider;
 
     @OneToOne
-    private AccountProfile detail;
+    private AccountProfile profile;
 
     private boolean isActivate;
 }

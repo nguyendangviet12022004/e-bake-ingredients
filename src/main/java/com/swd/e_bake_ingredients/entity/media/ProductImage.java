@@ -1,6 +1,6 @@
 package com.swd.e_bake_ingredients.entity.media;
 
-import com.swd.e_bake_ingredients.entity.product.ProductVariant;
+import com.swd.e_bake_ingredients.entity.product.Product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -19,5 +19,5 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class ProductImage extends Image {
     @ManyToOne
-    private ProductVariant productVariant;
+    private Product product;
 }

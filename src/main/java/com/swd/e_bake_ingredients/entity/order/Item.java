@@ -1,6 +1,6 @@
 package com.swd.e_bake_ingredients.entity.order;
 
-import com.swd.e_bake_ingredients.entity.product.ProductVariant;
+import com.swd.e_bake_ingredients.entity.product.Product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ public class Item {
     private Integer id;
 
     @ManyToOne
-    private ProductVariant productVariant;
+    private Product product;
 
     @ManyToOne
     private Cart cart;
