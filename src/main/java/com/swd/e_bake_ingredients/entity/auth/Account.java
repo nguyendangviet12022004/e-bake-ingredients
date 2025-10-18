@@ -1,7 +1,9 @@
 package com.swd.e_bake_ingredients.entity.auth;
 
 import com.swd.e_bake_ingredients.constant.AccountProvider;
+import com.swd.e_bake_ingredients.constant.AccountRole;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,12 +32,11 @@ public class Account {
 
     private String password;
 
-    @ManyToOne
     private AccountRole role;
 
     private AccountProvider provider;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private AccountProfile profile;
 
     private boolean isActivate;

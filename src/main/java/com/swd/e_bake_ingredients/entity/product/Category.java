@@ -1,7 +1,5 @@
 package com.swd.e_bake_ingredients.entity.product;
 
-import com.swd.e_bake_ingredients.entity.media.CategoryImage;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +22,4 @@ public class Category {
     private Integer id;
     private String name;
     private String description;
-
-    @OneToOne
-    private CategoryImage image;
 }

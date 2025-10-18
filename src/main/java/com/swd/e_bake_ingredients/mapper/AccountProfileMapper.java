@@ -13,7 +13,6 @@ public class AccountProfileMapper {
                 .phoneNumber(entity.getPhoneNumber())
                 .gender(entity.isGender())
                 .dob(entity.getDob())
-                .image(ImageMapper.toDTO(entity.getProfileImage()))
                 .build();
     }
 
@@ -26,7 +25,6 @@ public class AccountProfileMapper {
                 .phoneNumber(dto.getPhoneNumber())
                 .gender(dto.isGender())
                 .dob(dto.getDob())
-                // .profileImage(ImageMapper.toEntity(dto.getImage()))
                 .build();
     }
 }

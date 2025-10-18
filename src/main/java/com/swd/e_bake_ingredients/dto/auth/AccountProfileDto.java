@@ -24,5 +24,4 @@ public class AccountProfileDto {
 
     private LocalDate dob;
 
-    private ImageDTO image;
 }

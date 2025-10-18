@@ -14,7 +14,6 @@ public class CategoryMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .image(ImageMapper.toDTO(entity.getImage()))
                 .build();
     }
 
@@ -25,7 +24,6 @@ public class CategoryMapper {
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                // .image(ImageMapper.toEntity(dto.getImage()))
                 .build();
     }
 
