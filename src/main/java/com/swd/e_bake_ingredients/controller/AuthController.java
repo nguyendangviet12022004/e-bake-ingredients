@@ -39,12 +39,19 @@ public class AuthController {
 
         if (authService.checkEmailExists(account.getEmail())) {
             model.addAttribute("errMsg", "This email is exsits");
+            model.addAttribute("account", account);
+            return "auth/register";
+        }
+
+        if (authService.checkPhoneNumberExists(account.getProfile().getPhoneNumber())) {
+            model.addAttribute("errMsg", "This phone number is exsits");
+            model.addAttribute("account", account);
             return "auth/register";
         }
 
         authService.register(account, AccountRole.ROLE_CUSTOMER, AccountProvider.LOCAL);
 
-        return "redirect:/auth/login";
+        return "redirect:/auth/login?success=true";
     }
 
 }

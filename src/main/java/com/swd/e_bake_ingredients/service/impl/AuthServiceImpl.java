@@ -51,4 +51,9 @@ public class AuthServiceImpl implements AuthService {
         return accountRepository.existsByEmail(email);
     }
 
+    @Override
+    public boolean checkPhoneNumberExists(String phone) {
+        return accountRepository.existsByProfilePhoneNumber(phone);
+    }
+
 }
