@@ -7,7 +7,7 @@ services:
     env_file:
       - db.env
     ports:
-      - "3306:3306"
+      - "3300:3306"
 
   mail:
     image: maildev/maildev
