@@ -21,7 +21,19 @@ public class SecurityConfig {
                         .anyRequest().permitAll());
 
         http.formLogin(form -> form
-                .loginPage("/auth/login"));
+                .loginPage("/auth/login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/")
+                .failureUrl("/auth/login?error=true")
+                .permitAll());
+
+        http.logout(
+                logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/auth/login?logout=true"));
 
         return http.build();
     }

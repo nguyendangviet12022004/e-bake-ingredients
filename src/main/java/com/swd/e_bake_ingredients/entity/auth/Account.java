@@ -5,6 +5,8 @@ import com.swd.e_bake_ingredients.constant.AccountRole;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,8 +34,10 @@ public class Account {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private AccountRole role;
 
+    @Enumerated(EnumType.STRING)
     private AccountProvider provider;
 
     @OneToOne(cascade = CascadeType.ALL)
