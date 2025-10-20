@@ -14,7 +14,6 @@ public class BrandMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .logo(ImageMapper.toDTO(entity.getLogo()))
                 .build();
     }
 

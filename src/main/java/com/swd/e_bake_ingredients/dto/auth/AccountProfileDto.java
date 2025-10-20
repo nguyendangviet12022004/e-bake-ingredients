@@ -2,8 +2,6 @@ package com.swd.e_bake_ingredients.dto.auth;
 
 import java.time.LocalDate;
 
-import com.swd.e_bake_ingredients.dto.product.ImageDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

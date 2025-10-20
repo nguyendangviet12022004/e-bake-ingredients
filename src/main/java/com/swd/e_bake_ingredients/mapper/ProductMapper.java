@@ -1,7 +1,6 @@
 package com.swd.e_bake_ingredients.mapper;
 
 import com.swd.e_bake_ingredients.dto.product.ProductDTO;
-import com.swd.e_bake_ingredients.entity.media.Image;
 import com.swd.e_bake_ingredients.entity.product.Product;
 
 import java.util.List;
@@ -15,8 +14,9 @@ public class ProductMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .price(entity.getPrice())
+                .unitPrice(entity.getUnitPrice())
                 .stock(entity.getStock())
+                .discount(entity.getDiscount())
                 .images(entity.getImages().stream()
                         .map(ImageMapper::toDTO)
                         .collect(Collectors.toList()))
@@ -30,7 +30,7 @@ public class ProductMapper {
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .price(dto.getPrice())
+                .unitPrice(dto.getUnitPrice())
                 .stock(dto.getStock())
                 // .images(dto.getImages().stream()
                 // .map(ImageMapper::toEntity)

@@ -1,22 +1,241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home page</title>
+    <title>E-Bake Ingredients</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <style>
+      .card-img-top {
+        height: 200px;
+        object-fit: cover;
+      }
+      .product-card {
+        height: 100%;
+      }
+      .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 3px;
+      }
+    </style>
   </head>
   <body>
     <th:block th:replace="~{common/layout :: header}"></th:block>
-    <h1>Hello World</h1>
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+            <div class="card-header"><h5 class="mb-0">Filters</h5></div>
+            <div class="card-body">
+              <form id="filterForm" method="get" th:action="@{/}">
+                <!-- Category Filter -->
+                <div class="mb-3">
+                  <label class="form-label">Categories</label>
+                  <div class="overflow-auto" style="max-height: 200px">
+                    <div class="form-check" th:each="category : ${categories}">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        th:name="categoryIds"
+                        th:value="${category.id}"
+                        th:id="${'category-' + category.id}"
+                        th:checked="${categoryIds != null and categoryIds.contains( category.id)}"
+                      />
+                      <label
+                        class="form-check-label"
+                        th:for="${'category-' + category.id}"
+                        th:text="${category.name}"
+                        >Category</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Brand Filter -->
+                <div class="mb-3">
+                  <label class="form-label">Brands</label>
+                  <div class="overflow-auto" style="max-height: 200px">
+                    <div class="form-check" th:each="brand : ${brands}">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        th:name="brandIds"
+                        th:value="${brand.id}"
+                        th:id="${'brand-' + brand.id}"
+                        th:checked="${brandIds != null and brandIds.contains( brand.id)}"
+                      />
+                      <label
+                        class="form-check-label"
+                        th:for="${'brand-' + brand.id}"
+                        th:text="${brand.name}"
+                        >Brand</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Price Range -->
+                <div class="mb-3">
+                  <label class="form-label">Price Range</label>
+                  <div class="input-group mb-2">
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="minPrice"
+                      placeholder="Min"
+                      min="0"
+                      th:value="${param.minPrice != null ? param.minPrice : ''}"
+                    />
+                    <span class="input-group-text">-</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="maxPrice"
+                      placeholder="Max"
+                      min="0"
+                      th:value="${param.maxPrice != null ? param.maxPrice : ''}"
+                    />
+                  </div>
+                </div>
+                <!-- Buttons -->
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary">Filter</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-md-9">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="product : ${products}">
+              <div class="card h-100 product-card position-relative">
+                <span
+                  class="discount-badge"
+                  th:if="${product.discount > 0}"
+                  th:text="${#numbers.formatDecimal(product.discount * 100, 0, 0)} + '%'"
+                  >-10%</span
+                >
+
+                <!-- image: first or default -->
+                <img
+                  class="card-img-top"
+                  th:if="${product.images != null and !#lists.isEmpty(product.images)}"
+                  th:src="${product.images[0].src}"
+                  th:alt="${product.images[0].altText}"
+                />
+                <img
+                  class="card-img-top"
+                  th:unless="${product.images != null and !#lists.isEmpty(product.images)}"
+                  th:src="@{/images/default-product.jpg}"
+                  alt="Default product image"
+                />
+
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title" th:text="${product.name}">
+                    Product Name
+                  </h5>
+                  <p
+                    class="card-text text-truncate"
+                    th:text="${product.description}"
+                  >
+                    Description
+                  </p>
+
+                  <div class="mt-auto">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <div>
+                        <div th:if="${product.discount > 0}">
+                          <small
+                            class="text-muted text-decoration-line-through me-2"
+                            th:text="${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                            >50.00</small
+                          >
+                          <span
+                            class="fw-bold text-danger"
+                            th:text="${#numbers.formatDecimal(product.unitPrice * (1 - product.discount), 0, 'COMMA', 2, 'POINT')}"
+                            >45.00</span
+                          >
+                        </div>
+                        <div th:unless="${product.discount > 0}">
+                          <span
+                            class="fw-bold"
+                            th:text="${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                            >50.00</span
+                          >
+                        </div>
+                        <div
+                          class="small text-muted"
+                          th:if="${product.unitPrice != 0}"
+                          th:text="'Unit price: ' + ${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                        ></div>
+                      </div>
+
+                      <div>
+                        <span
+                          class="badge bg-success"
+                          th:if="${product.stock > 0}"
+                          >In Stock</span
+                        >
+                        <span
+                          class="badge bg-danger"
+                          th:unless="${product.stock > 0}"
+                          >Out of Stock</span
+                        >
+                      </div>
+                    </div>
+
+                    <a
+                      th:href="@{/product/{id}(id=${product.id})}"
+                      class="btn btn-outline-primary w-100 mb-2"
+                      >View</a
+                    >
+                    <button
+                      class="btn btn-primary w-100"
+                      th:disabled="${product.stock <= 0}"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- if no products -->
+            <div
+              class="col-12"
+              th:if="${products == null or #lists.isEmpty(products)}"
+            >
+              <div class="alert alert-info">No products found.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <th:block th:replace="~{common/layout :: footer}"></th:block>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // submit form after reset so filters clear
+      document
+        .getElementById("filterForm")
+        .addEventListener("reset", function () {
+          setTimeout(() => this.submit(), 10);
+        });
+    </script>
   </body>
 </html>
