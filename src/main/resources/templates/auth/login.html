@@ -22,11 +22,14 @@
           <div th:if="${param.logout}" class="alert alert-success">
             You have been logged out.
           </div>
+
           <div
-            th:if="${success}"
+            th:if="${param.success}"
             class="alert alert-success"
-            th:text="${success}"
-          ></div>
+            role="alert"
+          >
+            Register successfully
+          </div>
 
           <form th:action="@{/auth/login}" method="post">
             <div class="mb-3">
@@ -35,7 +38,7 @@
                 type="email"
                 class="form-control"
                 id="email"
-                name="username"
+                name="email"
                 required
               />
             </div>

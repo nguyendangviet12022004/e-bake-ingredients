@@ -4,6 +4,8 @@ import com.swd.e_bake_ingredients.constant.DeliveryStatusValue;
 import com.swd.e_bake_ingredients.entity.order.Delivery;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +24,6 @@ public class DeliveryStatus extends Status {
     @ManyToOne
     private Delivery delivery;
 
+    @Enumerated(EnumType.STRING)
     private DeliveryStatusValue status;
 }

@@ -7,7 +7,7 @@ services:
     env_file:
       - db.env
     ports:
-      - "3306:3306"
+      - "3300:3306"
 
   mail:
     image: maildev/maildev
@@ -15,5 +15,14 @@ services:
     ports:
       - "1080:1080"
       - "1025:1025"
+
+  web:
+    build:
+      context: .
+    container_name: e-bake-ingredients-web
+    env_file:
+      - web.env
+    ports:
+      - "8080:8080"
 volumes:
   data:
