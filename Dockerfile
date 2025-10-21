@@ -4,9 +4,11 @@ WORKDIR /build
 
 COPY pom.xml ./
 
+RUN mvn dependency:go-offline
+
 COPY src ./src
 
-RUN mvn clean install -DskipTests
+RUN mvn package -DskipTests
 
 FROM openjdk:21-jdk-slim AS run
 

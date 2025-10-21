@@ -225,6 +225,53 @@
         </div>
       </div>
     </div>
+    <!-- Pagination -->
+    <div class="row mt-4" th:if="${page != null and page.totalPages > 0}">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+          <small
+            class="text-muted"
+            th:text="'Showing ' + (${page.number} * ${page.size} + 1) + ' - ' + (${page.number} * ${page.size} + ${products.size()}) + ' of ' + ${page.totalElements}"
+            >Showing 1 - 9 of 42</small
+          >
+        </div>
+
+        <nav>
+          <ul class="pagination mb-0">
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+              <a
+                class="page-link"
+                th:href="@{/(page=${page.number - 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                aria-label="Previous"
+                >Previous</a
+              >
+            </li>
+
+            <li
+              class="page-item"
+              th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+              th:classappend="${i == page.number} ? 'active'"
+            >
+              <a
+                class="page-link"
+                th:text="${i + 1}"
+                th:href="@{/(page=${i}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                >1</a
+              >
+            </li>
+
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+              <a
+                class="page-link"
+                th:href="@{/(page=${page.number + 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                aria-label="Next"
+                >Next</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
 
     <th:block th:replace="~{common/layout :: footer}"></th:block>
 
@@ -233,8 +280,9 @@
       // submit form after reset so filters clear
       document
         .getElementById("filterForm")
-        .addEventListener("reset", function () {
-          setTimeout(() => this.submit(), 10);
+        .addEventListener("reset", function (e) {
+          e.preventDefault();
+          window.location.href = "/";
         });
     </script>
   </body>
