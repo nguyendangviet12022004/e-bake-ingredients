@@ -31,7 +31,9 @@ public class Item {
     @ManyToOne
     private Order order;
 
-    private int quantity;
+    private Integer quantity;
 
-    private double price;
+    private Double unitPrice;
+
+    // private Double subTotal;
 }

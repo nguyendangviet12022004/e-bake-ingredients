@@ -205,8 +205,10 @@
                       >View</a
                     >
                     <button
-                      class="btn btn-primary w-100"
+                      sec:authorize="hasRole('CUSTOMER')"
+                      class="btn btn-primary w-100 btn-add-to-cart"
                       th:disabled="${product.stock <= 0}"
+                      th:data-product-id="${product.id}"
                     >
                       Add to Cart
                     </button>
@@ -284,6 +286,47 @@
           e.preventDefault();
           window.location.href = "/";
         });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".btn-add-to-cart");
+
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", async function () {
+            const productId = this.dataset.productId;
+
+            try {
+              const response = await fetch(`/cart/add?productId=${productId}`, {
+                method: "POST",
+              });
+              const data = await response.json();
+
+              // Hiển thị thông báo (Bootstrap alert)
+              showSuccessAlert(data.message || "Added to cart!");
+            } catch (error) {
+              console.error("Error adding to cart:", error);
+              showErrorAlert("Something went wrong!");
+            }
+          });
+        });
+
+        function showSuccessAlert(message) {
+          const alert = document.createElement("div");
+          alert.className =
+            "alert alert-success position-fixed top-0 end-0 m-3";
+          alert.textContent = message;
+          document.body.appendChild(alert);
+          setTimeout(() => alert.remove(), 2000);
+        }
+
+        function showErrorAlert(message) {
+          const alert = document.createElement("div");
+          alert.className = "alert alert-danger position-fixed top-0 end-0 m-3";
+          alert.textContent = message;
+          document.body.appendChild(alert);
+          setTimeout(() => alert.remove(), 2000);
+        }
+      });
     </script>
   </body>
 </html>
