@@ -90,4 +90,98 @@ public class CartServiceImpl implements CartService {
         return CartMapper.toDTO(cart);
     }
 
+    @Override
+    public CartDTO updateItemQuantity(Integer itemId, Integer quantity, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        Integer accountId = null;
+
+        if (principal instanceof AccountUserDetails) {
+            accountId = ((AccountUserDetails) principal).getAccount().getId();
+        } else {
+            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+        }
+
+        Optional<Cart> cartOp = this.cartRepository.findByCustomerId(accountId);
+        Cart cart = cartOp.get();
+        if (cart == null)
+            throw new IllegalArgumentException("Cart not found");
+
+        Optional<Item> opt = cart.getItems().stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst();
+
+        if (!opt.isPresent())
+            throw new IllegalArgumentException("Item not found in cart");
+
+        Item item = opt.get();
+        if (quantity == null || quantity <= 0) {
+            // remove
+            cart.getItems().remove(item);
+        } else {
+            item.setQuantity(quantity);
+            // update unit price from product if needed
+            if (item.getProduct() != null && item.getUnitPrice() == null) {
+                item.setUnitPrice(item.getProduct().getUnitPrice());
+            }
+        }
+
+        // // recalc total
+        // double total = cart.getItems().stream()
+        // .filter(i -> i.getUnitPrice() != null && i.getQuantity() != null)
+        // .mapToDouble(i -> i.getUnitPrice() * i.getQuantity())
+        // .sum();
+        // cart.setTotal(total);
+
+        cartRepository.save(cart);
+        return CartMapper.toDTO(cart);
+    }
+
+    @Override
+    public CartDTO removeItem(Integer itemId, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        Integer accountId = null;
+
+        if (principal instanceof AccountUserDetails) {
+            accountId = ((AccountUserDetails) principal).getAccount().getId();
+        } else {
+            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+        }
+
+        Optional<Cart> cartOp = this.cartRepository.findByCustomerId(accountId);
+        Cart cart = cartOp.get();
+
+        cart.getItems().removeIf(i -> i.getId().equals(itemId));
+
+        // double total = cart.getItems().stream()
+        // .filter(i -> i.getUnitPrice() != null && i.getQuantity() != null)
+        // .mapToDouble(i -> i.getUnitPrice() * i.getQuantity())
+        // .sum();
+        // cart.setTotal(total);
+
+        for (Item item : cart.getItems()) {
+            if (item.getId() == itemId) {
+                item.setCart(null);
+                break;
+            }
+        }
+        cartRepository.save(cart);
+        return CartMapper.toDTO(cart);
+    }
+
+    // private Integer resolveAccountId(Authentication authentication) {
+    // Object principal = authentication.getPrincipal();
+    // if (principal instanceof AccountUserDetails) {
+    // return ((AccountUserDetails) principal).getId();
+    // } else if (principal instanceof
+    // org.springframework.security.core.userdetails.User) {
+    // String username = ((org.springframework.security.core.userdetails.User)
+    // principal).getUsername();
+    // return accountRepository.findByEmail(username)
+    // .orElseThrow(() -> new IllegalArgumentException("Account not found"))
+    // .getId();
+    // }
+    // throw new IllegalArgumentException("Unable to resolve account from
+    // authentication");
+    // }
+
 }

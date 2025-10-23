@@ -8,4 +8,8 @@ public interface CartService {
     CartDTO getCart(Authentication authentication);
 
     CartDTO addItem(Integer productId, Authentication authentication);
+
+    CartDTO updateItemQuantity(Integer itemId, Integer quantity, Authentication authentication);
+
+    CartDTO removeItem(Integer itemId, Authentication authentication);
 }
