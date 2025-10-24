@@ -20,11 +20,19 @@ import lombok.NoArgsConstructor;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer id;
+
+    private String fullName;
+
+    private String phoneNumber;
+
     private String city;
     private String district;
     private String ward;
-    private String detail;
+    private String addressLine;
+
+    private Boolean isDefault;
 
     @ManyToOne
     private Customer customer;

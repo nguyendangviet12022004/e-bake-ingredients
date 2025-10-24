@@ -39,7 +39,7 @@ public class HomeController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "6") int size,
             Model model) {
 
         Pageable pageable = PageRequest.of(page, size);

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Addresses - E-Bake Ingredients</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    .address-card { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <th:block th:replace="~{common/layout :: header}"></th:block>
+
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>My Addresses</h4>
+      <button class="btn btn-primary" id="toggleAddBtn">Add Address</button>
+    </div>
+
+    <div id="addForm" class="card p-3 mb-4" style="display:none;">
+      <form th:action="@{/account/addresses/add}" th:object="${newAddress}" method="post">
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label">Full name</label>
+            <input class="form-control" th:field="*{fullName}" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            <input class="form-control" th:field="*{phoneNumber}" required />
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Address line</label>
+            <input class="form-control" th:field="*{addressLine}" required />
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Ward</label>
+            <input class="form-control" th:field="*{ward}" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">District</label>
+            <input class="form-control" th:field="*{district}" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">City</label>
+            <input class="form-control" th:field="*{city}" />
+          </div>
+
+          <div class="col-12 mt-2">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" th:field="*{isDefault}" id="isDefault"/>
+              <label class="form-check-label" for="isDefault">Set as default address</label>
+            </div>
+          </div>
+
+          <div class="col-12 mt-3 d-flex gap-2">
+            <button class="btn btn-success" type="submit">Save</button>
+            <button class="btn btn-secondary" type="button" id="cancelAdd">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div th:if="${addresses == null or #lists.isEmpty(addresses)}">
+      <div class="alert alert-info">No saved addresses.</div>
+    </div>
+
+    <div th:each="addr : ${addresses}">
+      <div class="card address-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="mb-1" th:text="${addr.fullName}">Full name</h6>
+              <div class="small text-muted" th:text="${addr.phoneNumber}">Phone</div>
+              <div class="mt-2" th:text="${addr.addressLine + ', ' + (addr.ward ?: '') + (addr.district != null ? ', ' + addr.district : '') + (addr.city != null ? ', ' + addr.city : '')}">Address</div>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-success" th:if="${addr.isDefault}">Default</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <th:block th:replace="~{common/layout :: footer}"></th:block>
+
+  <script>
+    document.getElementById('toggleAddBtn').addEventListener('click', function () {
+      const f = document.getElementById('addForm');
+      f.style.display = (f.style.display === 'none' || f.style.display === '') ? 'block' : 'none';
+    });
+    document.getElementById('cancelAdd').addEventListener('click', function () {
+      document.getElementById('addForm').style.display = 'none';
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
