@@ -32,121 +32,159 @@
       <div
         th:unless="${cart == null or cart.items == null or #lists.isEmpty(cart.items)}"
       >
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th class="text-center">Unit Price</th>
-                <th class="text-center">Quantity</th>
-                <th class="text-end">Subtotal</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                th:each="item : ${cart.items}"
-                th:id="${'item-row-' + item.id}"
-              >
-                <td>
-                  <div class="d-flex align-items-center">
-                    <img
-                      th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
-                      th:src="${item.product.images[0].src}"
-                      alt=""
-                      class="product-img me-3"
-                    />
-                    <img
-                      th:unless="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
-                      th:src="@{/images/default-product.jpg}"
-                      alt=""
-                      class="product-img me-3"
-                    />
-                    <div>
-                      <div th:text="${item.product.name}">Product name</div>
-                      <small class="text-muted" th:text="${item.product.id}"
-                        >#123</small
-                      >
-                    </div>
-                  </div>
-                </td>
-                <td
-                  class="text-center"
-                  th:text="${#numbers.formatDecimal(item.unitPrice,0,'COMMA',2,'POINT')}"
+        <form id="checkoutForm" th:action="@{/order/create}" method="get">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th style="width: 40px">
+                    <input type="checkbox" id="select-all" />
+                  </th>
+                  <th>Product</th>
+                  <th class="text-center">Unit Price</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-end">Subtotal</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="item : ${cart.items}"
+                  th:id="${'item-row-' + item.id}"
                 >
-                  $0.00
-                </td>
-                <td class="text-center">
-                  <div class="d-flex justify-content-center align-items-center">
+                  <td>
                     <input
-                      class="form-control text-center quantity-input"
-                      style="width: 80px"
-                      type="number"
-                      min="1"
-                      th:value="${item.quantity}"
-                      th:data-item-id="${item.id}"
+                      type="checkbox"
+                      name="selectedItemIds"
+                      th:value="${item.id}"
+                      class="select-item"
                     />
+                  </td>
+
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img
+                        th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                        th:src="${item.product.images[0].src}"
+                        alt=""
+                        class="product-img me-3"
+                      />
+                      <img
+                        th:unless="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                        th:src="@{/images/default-product.jpg}"
+                        alt=""
+                        class="product-img me-3"
+                      />
+                      <div>
+                        <div th:text="${item.product.name}">Product name</div>
+                        <small class="text-muted" th:text="${item.product.id}"
+                          >#123</small
+                        >
+                      </div>
+                    </div>
+                  </td>
+
+                  <td
+                    class="text-center"
+                    th:text="${#numbers.formatDecimal(item.unitPrice,0,'COMMA',2,'POINT')}"
+                  >
+                    $0.00
+                  </td>
+
+                  <td class="text-center">
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        class="form-control text-center quantity-input"
+                        style="width: 80px"
+                        type="number"
+                        min="1"
+                        th:value="${item.quantity}"
+                        th:data-item-id="${item.id}"
+                      />
+                      <button
+                        class="btn btn-sm btn-outline-secondary ms-2 update-btn"
+                        type="button"
+                        th:data-item-id="${item.id}"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </td>
+
+                  <td
+                    class="text-end"
+                    th:id="${'subtotal-' + item.id}"
+                    th:text="${#numbers.formatDecimal(item.subtotal,0,'COMMA',2,'POINT')}"
+                  >
+                    $0.00
+                  </td>
+
+                  <td class="text-end">
                     <button
-                      class="btn btn-sm btn-outline-secondary ms-2 update-btn"
+                      class="btn btn-sm btn-outline-danger remove-btn"
                       type="button"
                       th:data-item-id="${item.id}"
                     >
-                      Update
+                      Remove
                     </button>
-                  </div>
-                </td>
-                <td
-                  class="text-end"
-                  th:id="${'subtotal-' + item.id}"
-                  th:text="${#numbers.formatDecimal(item.subtotal,0,'COMMA',2,'POINT')}"
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <a class="btn btn-secondary" th:href="@{/}">Continue shopping</a>
+            </div>
+            <div class="col-md-6 text-end">
+              <div class="d-inline-block me-3 text-end">
+                <div>Total</div>
+                <div
+                  class="fw-bold"
+                  id="cart-total"
+                  th:text="${#numbers.formatDecimal(cart.total,0,'COMMA',2,'POINT')}"
                 >
                   $0.00
-                </td>
-                <td class="text-end">
-                  <button
-                    class="btn btn-sm btn-outline-danger remove-btn"
-                    type="button"
-                    th:data-item-id="${item.id}"
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <a class="btn btn-secondary" th:href="@{/}">Continue shopping</a>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between mb-2">
-                  <div>Total</div>
-                  <div
-                    class="fw-bold"
-                    id="cart-total"
-                    th:text="${#numbers.formatDecimal(cart.total,0,'COMMA',2,'POINT')}"
-                  >
-                    $0.00
-                  </div>
                 </div>
-                <a class="btn btn-primary w-100" th:href="@{/checkout}"
-                  >Proceed to Checkout</a
-                >
               </div>
+              <button type="submit" class="btn btn-success">
+                Checkout selected
+              </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
 
     <th:block th:replace="~{common/layout :: footer}"></th:block>
+
     <script>
+      document
+        .getElementById("checkoutForm")
+        .addEventListener("submit", function (e) {
+          const checkedItems = document.querySelectorAll(
+            ".select-item:checked"
+          );
+          if (checkedItems.length === 0) {
+            e.preventDefault();
+            alert("Please select at least one product to checkout!");
+            return false;
+          }
+        });
+      // select all / toggle
+      document.addEventListener("change", function (e) {
+        if (e.target && e.target.id === "select-all") {
+          const checked = e.target.checked;
+          document
+            .querySelectorAll(".select-item")
+            .forEach((cb) => (cb.checked = checked));
+        }
+      });
+
       function showToast(message) {
-        // simple alert - replace with project toast if available
         alert(message);
       }
 
@@ -154,9 +192,7 @@
         try {
           const res = await fetch("/cart/update", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ itemId: itemId, quantity: quantity }),
           });
           const data = await res.json();
@@ -185,9 +221,7 @@
         try {
           const res = await fetch("/cart/remove", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ itemId: itemId }),
           });
           const data = await res.json();
@@ -228,6 +262,7 @@
         }
       });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -1,11 +1,20 @@
 package com.swd.e_bake_ingredients.entity.order;
 
-import com.swd.e_bake_ingredients.constant.PaymentMethod;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+
+import com.swd.e_bake_ingredients.constant.PaymentMethod;
+import com.swd.e_bake_ingredients.entity.tracking.PaymentStatus;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +34,12 @@ public class Payment {
 
     private Double amount;
 
+    @OneToOne
+    private PaymentStatus currentStatus;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "payment")
+    private List<PaymentStatus> statusHistory;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 }

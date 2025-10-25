@@ -1,9 +1,12 @@
 package com.swd.e_bake_ingredients.entity.order;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.swd.e_bake_ingredients.entity.auth.Customer;
+import com.swd.e_bake_ingredients.entity.tracking.OrderStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,4 +42,14 @@ public class Order {
 
     @OneToOne
     private Payment payment;
+
+    @OneToOne
+    private OrderStatus currentStatus;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<OrderStatus> statusHistory;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
