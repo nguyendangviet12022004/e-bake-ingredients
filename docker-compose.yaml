@@ -9,12 +9,12 @@ services:
     ports:
       - "3300:3306"
 
-  mail:
-    image: maildev/maildev
-    container_name: e-bake-ingredients-mail
-    ports:
-      - "1080:1080"
-      - "1025:1025"
+#  mail:
+#    image: maildev/maildev
+#    container_name: e-bake-ingredients-mail
+#    ports:
+#      - "1080:1080"
+#      - "1025:1025"
 
   web-1:
     build:
@@ -22,32 +22,32 @@ services:
     container_name: e-bake-ingredients-web-1
     env_file:
       - web.env
-    # ports:
-    #   - "8080:8080"
-
-  web-2:
-    build:
-      context: .
-    container_name: e-bake-ingredients-web-2
-    env_file:
-      - web.env
-    # ports:
-    #   - "8080:8080"
-
-  web-3:
-    build:
-      context: .
-    container_name: e-bake-ingredients-web-3
-    env_file:
-      - web.env
-    # ports:
-    #   - "8080:8080"
-
-  nginx:
-    image: nginx
-    volumes:
-      - "./nginx/config:/etc/nginx"
     ports:
-      - "8080:8080"
+       - "8080:8080"
+
+#  web-2:
+#    build:
+#      context: .
+#    container_name: e-bake-ingredients-web-2
+#    env_file:
+#      - web.env
+    # ports:
+    #   - "8080:8080"
+
+#  web-3:
+#    build:
+#      context: .
+#    container_name: e-bake-ingredients-web-3
+#    env_file:
+#      - web.env
+    # ports:
+    #   - "8080:8080"
+
+#  nginx:
+#    image: nginx
+#    volumes:
+#      - "./nginx/config:/etc/nginx"
+#    ports:
+#      - "80:8080"
 volumes:
   data:
