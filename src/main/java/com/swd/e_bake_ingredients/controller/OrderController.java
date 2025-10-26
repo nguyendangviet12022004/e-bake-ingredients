@@ -23,8 +23,6 @@ import com.swd.e_bake_ingredients.constant.PaymentMethod;
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
-
-    private final CartService cartService;
     private final AddressService addressService;
     private final OrderService orderService;
 
@@ -56,6 +54,6 @@ public class OrderController {
         OrderDTO order = orderService.createOrder(createDto, authentication);
         model.addAttribute("order", order);
         // simple success page; you may redirect to order details page instead
-        return "order/success";
+        return "order/detail";
     }
 }

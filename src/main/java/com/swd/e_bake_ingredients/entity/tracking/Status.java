@@ -2,7 +2,11 @@ package com.swd.e_bake_ingredients.entity.tracking;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,10 +23,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@EntityListeners(AuditingEntityListener.class)
+
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
+
+    @CreatedDate
     private LocalDateTime timestamp;
 }

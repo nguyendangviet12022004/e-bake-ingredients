@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Detail - E-Bake Ingredients</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .product-img {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+      }
+      .timeline {
+        list-style: none;
+        padding-left: 0;
+      }
+      .timeline li {
+        padding: 0.5rem 0;
+        border-left: 2px solid #eee;
+        margin-left: 1rem;
+        position: relative;
+      }
+      .timeline li::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #0d6efd;
+        position: absolute;
+        left: -6px;
+        top: 0.6rem;
+      }
+    </style>
+  </head>
+  <body>
+    <th:block th:replace="~{common/layout :: header}"></th:block>
+
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <h4>Order detail</h4>
+          <div class="text-muted">
+            Order #
+            <span th:text="${order.id}">123</span>
+            &nbsp;•&nbsp;
+            <span
+              th:text="${order.currentStatusValue != null ? order.currentStatusValue : (order.currentStatus != null ? order.currentStatus.status : 'N/A')}"
+              >Status</span
+            >
+          </div>
+          <div
+            class="text-muted small"
+            th:if="${order.createdAt != null}"
+            th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"
+          >
+            Created
+          </div>
+        </div>
+        <div class="text-end">
+          <a class="btn btn-outline-secondary" th:href="@{/}"
+            >Continue shopping</a
+          >
+          <a class="btn btn-outline-primary" th:href="@{/account/orders}"
+            >My orders</a
+          >
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="card mb-3">
+            <div class="card-header">Items</div>
+            <div class="card-body">
+              <div
+                th:if="${order.items == null or #lists.isEmpty(order.items)}"
+                class="alert alert-info"
+              >
+                No items.
+              </div>
+              <div
+                class="table-responsive"
+                th:unless="${order.items == null or #lists.isEmpty(order.items)}"
+              >
+                <table class="table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th class="text-center">Unit price</th>
+                      <th class="text-center">Quantity</th>
+                      <th class="text-end">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="item : ${order.items}">
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img
+                            th:if="${item.product != null and item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                            th:src="${item.product.images[0].src}"
+                            class="product-img me-3"
+                            alt="img"
+                          />
+                          <img
+                            th:unless="${item.product != null and item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                            th:src="@{/images/default-product.jpg}"
+                            class="product-img me-3"
+                            alt="img"
+                          />
+                          <div>
+                            <div
+                              th:text="${item.product != null ? item.product.name : 'Product'}"
+                            >
+                              Product name
+                            </div>
+                            <small
+                              class="text-muted"
+                              th:text="${item.product != null ? item.product.id : ''}"
+                              >#id</small
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="text-center"
+                        th:text="${#numbers.formatDecimal(item.unitPrice,0,'COMMA',2,'POINT')}"
+                      >
+                        $0.00
+                      </td>
+                      <td class="text-center" th:text="${item.quantity}">1</td>
+                      <td
+                        class="text-end"
+                        th:text="${#numbers.formatDecimal(item.subtotal,0,'COMMA',2,'POINT')}"
+                      >
+                        $0.00
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-header">Delivery</div>
+            <div class="card-body">
+              <div th:if="${order.delivery == null}">
+                <div class="text-muted">No delivery information.</div>
+              </div>
+              <div th:if="${order.delivery != null}">
+                <div th:if="${order.delivery.address != null}">
+                  <h6 th:text="${order.delivery.address.fullName}">Name</h6>
+                  <div
+                    class="small text-muted mb-2"
+                    th:text="${order.delivery.address.phoneNumber}"
+                  >
+                    Phone
+                  </div>
+                  <div
+                    th:text="${order.delivery.address.addressLine + (order.delivery.address.ward != null ? ', ' + order.delivery.address.ward : '') + (order.delivery.address.district != null ? ', ' + order.delivery.address.district : '') + (order.delivery.address.city != null ? ', ' + order.delivery.address.city : '')}"
+                  >
+                    Address line
+                  </div>
+                </div>
+
+                <div class="mt-3">
+                  <strong>Delivered by:</strong>
+                  <span
+                    th:text="${order.delivery != null ? order.delivery.deliveredByName : 'TBD'}"
+                    >Staff</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-header">Status history</div>
+            <div class="card-body">
+              <div
+                th:if="${order.statusHistory == null or #lists.isEmpty(order.statusHistory)}"
+                class="text-muted small"
+              >
+                No history available.
+              </div>
+              <ul class="timeline" th:if="${order.statusHistory != null}">
+                <li th:each="s : ${order.statusHistory}">
+                  <div class="fw-semibold" th:text="${s.status}">STATUS</div>
+                  <div class="small text-muted" th:text="${s.description}">
+                    desc
+                  </div>
+                  <div
+                    class="small text-muted"
+                    th:if="${s.timestamp != null}"
+                    th:text="${#temporals.format(s.timestamp, 'dd/MM/yyyy HH:mm')}"
+                  >
+                    time
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card mb-3">
+            <div class="card-header">Payment</div>
+            <div class="card-body">
+              <div th:if="${order.payment == null}" class="text-muted">
+                No payment info.
+              </div>
+              <div th:if="${order.payment != null}">
+                <div>
+                  <strong>Method:</strong>
+                  <span th:text="${order.payment.method}">CASH</span>
+                </div>
+                <div class="mt-2">
+                  <strong>Amount:</strong>
+                  <span
+                    th:text="${#numbers.formatDecimal(order.payment.amount,0,'COMMA',2,'POINT')}"
+                    >$0.00</span
+                  >
+                </div>
+                <div class="mt-2">
+                  <strong>Status:</strong>
+                  <span
+                    th:text="${order.payment.currentStatus != null ? order.payment.currentStatus : (order.payment.status != null ? order.payment.status.status : 'N/A')}"
+                    >PAID</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="card-header">Order summary</div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>Items</div>
+                <div th:text="${order.items != null ? order.items.size() : 0}">
+                  0
+                </div>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <div>Total</div>
+                <div
+                  class="fw-bold"
+                  th:text="${#numbers.formatDecimal(order.total,0,'COMMA',2,'POINT')}"
+                >
+                  $0.00
+                </div>
+              </div>
+              <div class="mt-3">
+                <a class="btn btn-primary w-100" th:href="@{/account/orders}"
+                  >View all orders</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body text-center">
+              <div class="text-success mb-2">Order placed successfully</div>
+              <div
+                class="small text-muted"
+                th:if="${order.createdAt != null}"
+                th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"
+              >
+                created
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <th:block th:replace="~{common/layout :: footer}"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -19,12 +19,15 @@ import com.swd.e_bake_ingredients.dto.order.PaymentDTO;
 import com.swd.e_bake_ingredients.entity.auth.Customer;
 import com.swd.e_bake_ingredients.entity.order.Address;
 import com.swd.e_bake_ingredients.entity.order.Cart;
+import com.swd.e_bake_ingredients.entity.order.Delivery;
 import com.swd.e_bake_ingredients.entity.order.Item;
 import com.swd.e_bake_ingredients.entity.order.Order;
 import com.swd.e_bake_ingredients.entity.order.Payment;
 import com.swd.e_bake_ingredients.entity.tracking.OrderStatus;
+import com.swd.e_bake_ingredients.entity.tracking.PaymentStatus;
 import com.swd.e_bake_ingredients.constant.OrderStatusValue;
 import com.swd.e_bake_ingredients.constant.PaymentMethod;
+import com.swd.e_bake_ingredients.constant.PaymentStatusValue;
 import com.swd.e_bake_ingredients.mapper.OrderMapper;
 import com.swd.e_bake_ingredients.repository.AddressRepository;
 import com.swd.e_bake_ingredients.repository.CartRepository;
@@ -112,13 +115,12 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = new Order();
         order.setCustomer(Customer.builder().id(accountId).build());
-
+        order.setItems(itemsToOrder);
         double total = 0.0;
         for (Item it : itemsToOrder) {
             // detach from cart
             it.setCart(null);
             it.setOrder(order);
-            order.getItems().add(it);
             double up = it.getUnitPrice() != null ? it.getUnitPrice() : 0.0;
             int q = it.getQuantity() != null ? it.getQuantity() : 0;
             total += up * q;
@@ -128,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
         if (dto.getAddressId() != null) {
             Address address = addressRepository.findById(dto.getAddressId()).orElse(null);
             if (address != null) {
-                var delivery = new com.swd.e_bake_ingredients.entity.order.Delivery();
+                var delivery = new Delivery();
                 delivery.setAddress(address);
                 order.setDelivery(delivery);
             }
@@ -144,16 +146,26 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus initStatus = new OrderStatus();
         initStatus.setDescription("Order created");
         initStatus.setStatus(OrderStatusValue.PROCESSING);
-        initStatus.setTimestamp(LocalDateTime.now());
-        order.getStatusHistory().add(initStatus);
+        initStatus.setOrder(order);
+        order.setCurrentStatus(initStatus);
+        order.setStatusHistory(List.of(initStatus));
+
+        // create initial payemnt status and add to history
+        PaymentStatus paymentStatus = new PaymentStatus();
+        paymentStatus.setDescription("Processing");
+        paymentStatus.setStatus(PaymentStatusValue.PENDING);
+        paymentStatus.setPayment(payment);
+        payment.setCurrentStatus(paymentStatus);
+        payment.setStatusHistory(List.of(paymentStatus));
 
         // persist order
         Order saved = orderRepository.save(order);
 
-        // remove ordered items from cart entity and recalc cart total
-        cart.getItems().removeAll(itemsToOrder);
+        // // todo remove item
+        // // remove ordered items from cart entity and recalc cart total
+        // cart.getItems().removeAll(itemsToOrder);
 
-        cartRepository.save(cart);
+        // cartRepository.save(cart);
 
         // return DTO of saved order
         return OrderMapper.toDTO(saved);

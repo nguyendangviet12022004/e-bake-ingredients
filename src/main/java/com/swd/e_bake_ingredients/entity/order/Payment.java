@@ -4,12 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.swd.e_bake_ingredients.constant.PaymentMethod;
 import com.swd.e_bake_ingredients.entity.tracking.PaymentStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,11 +29,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
     private Double amount;
