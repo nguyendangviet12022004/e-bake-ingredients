@@ -15,6 +15,7 @@ import com.swd.e_bake_ingredients.repository.CartRepository;
 import com.swd.e_bake_ingredients.repository.ProductRepository;
 import com.swd.e_bake_ingredients.service.CartService;
 import com.swd.e_bake_ingredients.config.security.AccountUserDetails;
+import com.swd.e_bake_ingredients.config.security.OidcAccountUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,7 @@ public class CartServiceImpl implements CartService {
         if (principal instanceof AccountUserDetails) {
             accountId = ((AccountUserDetails) principal).getAccount().getId();
         } else {
-            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+            accountId = ((OidcAccountUser) principal).getAccount().getId();
         }
 
         Optional<Cart> cart = this.cartRepository.findByCustomerId(accountId);
@@ -53,7 +54,7 @@ public class CartServiceImpl implements CartService {
         if (principal instanceof AccountUserDetails) {
             accountId = ((AccountUserDetails) principal).getAccount().getId();
         } else {
-            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+            accountId = ((OidcAccountUser) principal).getAccount().getId();
         }
 
         Optional<Cart> cartOp = this.cartRepository.findByCustomerId(accountId);
@@ -98,9 +99,8 @@ public class CartServiceImpl implements CartService {
         if (principal instanceof AccountUserDetails) {
             accountId = ((AccountUserDetails) principal).getAccount().getId();
         } else {
-            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+            accountId = ((OidcAccountUser) principal).getAccount().getId();
         }
-
         Optional<Cart> cartOp = this.cartRepository.findByCustomerId(accountId);
         Cart cart = cartOp.get();
         if (cart == null)
@@ -144,7 +144,7 @@ public class CartServiceImpl implements CartService {
         if (principal instanceof AccountUserDetails) {
             accountId = ((AccountUserDetails) principal).getAccount().getId();
         } else {
-            return CartDTO.builder().items(Collections.emptyList()).total(0.0).build();
+            accountId = ((OidcAccountUser) principal).getAccount().getId();
         }
 
         Optional<Cart> cartOp = this.cartRepository.findByCustomerId(accountId);

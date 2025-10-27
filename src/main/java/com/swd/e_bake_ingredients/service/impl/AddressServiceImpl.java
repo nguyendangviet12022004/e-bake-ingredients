@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swd.e_bake_ingredients.config.security.AccountUserDetails;
+import com.swd.e_bake_ingredients.config.security.OidcAccountUser;
 import com.swd.e_bake_ingredients.dto.order.AddressDTO;
 import com.swd.e_bake_ingredients.entity.auth.Customer;
 import com.swd.e_bake_ingredients.entity.order.Address;
@@ -27,8 +28,9 @@ public class AddressServiceImpl implements AddressService {
         Object p = authentication.getPrincipal();
         if (p instanceof AccountUserDetails) {
             return ((AccountUserDetails) p).getAccount().getId();
+        } else {
+            return ((OidcAccountUser) p).getAccount().getId();
         }
-        return null;
     }
 
     @Override

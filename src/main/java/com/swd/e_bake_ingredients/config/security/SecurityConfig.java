@@ -10,10 +10,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final OidcAccountUserService oidcAccountUserService;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +41,10 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/auth/login?logout=true"));
+
+        http.oauth2Login(
+                login -> login.userInfoEndpoint(
+                        ie -> ie.oidcUserService(oidcAccountUserService)));
 
         http.csrf(AbstractHttpConfigurer::disable);
 

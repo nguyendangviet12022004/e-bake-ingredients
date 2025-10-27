@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swd.e_bake_ingredients.config.security.AccountUserDetails;
+import com.swd.e_bake_ingredients.config.security.OidcAccountUser;
 import com.swd.e_bake_ingredients.dto.order.AddressDTO;
 import com.swd.e_bake_ingredients.dto.order.DeliveryDTO;
 import com.swd.e_bake_ingredients.dto.order.ItemDTO;
@@ -49,7 +50,16 @@ public class OrderServiceImpl implements OrderService {
     private final AddressService addressService;
 
     private Integer resolveAccountId(Authentication authentication) {
-        return ((AccountUserDetails) authentication.getPrincipal()).getAccount().getId();
+        Object principal = authentication.getPrincipal();
+        Integer accountId = null;
+
+        if (principal instanceof AccountUserDetails) {
+            accountId = ((AccountUserDetails) principal).getAccount().getId();
+        } else {
+            accountId = ((OidcAccountUser) principal).getAccount().getId();
+        }
+
+        return accountId;
     }
 
     @Override
