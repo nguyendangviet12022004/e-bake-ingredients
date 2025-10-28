@@ -61,4 +61,9 @@ public class Order {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public double getTotal() {
+        // calculate total of order
+        return this.items.stream().map(i -> i.getQuantity() * i.getUnitPrice()).reduce(0.0, Double::sum);
+    }
 }

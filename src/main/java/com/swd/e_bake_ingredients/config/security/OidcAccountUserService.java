@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.swd.e_bake_ingredients.constant.AccountProvider;
 import com.swd.e_bake_ingredients.constant.AccountRole;
-import com.swd.e_bake_ingredients.entity.auth.Account;
 import com.swd.e_bake_ingredients.entity.auth.AccountProfile;
 import com.swd.e_bake_ingredients.entity.auth.Customer;
 import com.swd.e_bake_ingredients.entity.order.Cart;

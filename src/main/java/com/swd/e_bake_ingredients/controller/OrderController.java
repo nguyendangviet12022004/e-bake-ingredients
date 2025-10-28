@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.swd.e_bake_ingredients.dto.order.AddressDTO;
 import com.swd.e_bake_ingredients.dto.order.OrderCreateDTO;
 import com.swd.e_bake_ingredients.dto.order.OrderDTO;
+import com.swd.e_bake_ingredients.dto.order.OrderSummaryDTO;
 import com.swd.e_bake_ingredients.service.AddressService;
 import com.swd.e_bake_ingredients.service.OrderService;
 
@@ -55,4 +56,12 @@ public class OrderController {
         // simple success page; you may redirect to order details page instead
         return "order/detail";
     }
+
+    @GetMapping("/list/customer")
+    public String listCustomerOrders(Authentication authentication, Model model) {
+        List<OrderSummaryDTO> orders = orderService.getOrdersForCurrentCustomer(authentication);
+        model.addAttribute("orders", orders);
+        return "order/list/customer";
+    }
+
 }

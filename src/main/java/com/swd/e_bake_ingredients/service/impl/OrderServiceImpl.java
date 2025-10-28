@@ -16,7 +16,9 @@ import com.swd.e_bake_ingredients.dto.order.ItemDTO;
 import com.swd.e_bake_ingredients.dto.order.OrderCreateDTO;
 import com.swd.e_bake_ingredients.dto.order.OrderDTO;
 import com.swd.e_bake_ingredients.dto.order.OrderStatusDTO;
+import com.swd.e_bake_ingredients.dto.order.OrderSummaryDTO;
 import com.swd.e_bake_ingredients.dto.order.PaymentDTO;
+import com.swd.e_bake_ingredients.entity.auth.Account;
 import com.swd.e_bake_ingredients.entity.auth.Customer;
 import com.swd.e_bake_ingredients.entity.order.Address;
 import com.swd.e_bake_ingredients.entity.order.Cart;
@@ -179,5 +181,15 @@ public class OrderServiceImpl implements OrderService {
 
         // return DTO of saved order
         return OrderMapper.toDTO(saved);
+    }
+
+    @Override
+    public List<OrderSummaryDTO> getOrdersForCurrentCustomer(Authentication authentication) {
+        Integer accountId = resolveAccountId(authentication);
+
+        return orderRepository.findByCustomerIdOrderByCreatedAtDesc(accountId)
+                .stream()
+                .map(OrderMapper::toSummaryDTO)
+                .collect(Collectors.toList());
     }
 }

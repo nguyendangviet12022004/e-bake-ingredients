@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders - E-Bake Ingredients</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <th:block th:replace="~{common/layout :: header}"></th:block>
+
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>My Orders</h4>
+        <a class="btn btn-outline-primary" th:href="@{/}">Continue shopping</a>
+      </div>
+
+      <div
+        th:if="${orders == null or #lists.isEmpty(orders)}"
+        class="alert alert-info"
+      >
+        You have no orders yet.
+      </div>
+
+      <div class="card" th:unless="${orders == null or #lists.isEmpty(orders)}">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th class="text-center">Items</th>
+                <th class="text-end">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="order : ${orders}">
+                <td th:text="${order.id}">1</td>
+                <td
+                  th:text="${order.createdAt != null ? #temporals.format(order.createdAt,'dd/MM/yyyy HH:mm') : '-'}"
+                >
+                  12/09/2025
+                </td>
+                <td>
+                  <span class="badge bg-primary" th:text="${order.status}"
+                    >NEW</span
+                  >
+                </td>
+                <td class="text-center" th:text="${order.itemCount}">0</td>
+                <td
+                  class="text-end"
+                  th:text="${order.total != null ? #numbers.formatDecimal(order.total,0,'COMMA',2,'POINT') : '0.00'}"
+                >
+                  $0.00
+                </td>
+                <td class="text-end">
+                  <a
+                    class="btn btn-sm btn-outline-secondary"
+                    th:href="@{'/order/detail/' + ${order.id}}"
+                    >View</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <th:block th:replace="~{common/layout :: footer}"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

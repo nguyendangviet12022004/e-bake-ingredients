@@ -43,4 +43,17 @@ public class OrderMapper {
                 .updatedAt(e.getUpdatedAt())
                 .build();
     }
+
+    public static OrderSummaryDTO toSummaryDTO(Order e) {
+        if (e == null)
+            return null;
+        return OrderSummaryDTO.builder()
+                .id(e.getId())
+                .createdAt(e.getCreatedAt())
+                .status(e.getCurrentStatus() != null ? e.getCurrentStatus().getStatus().name()
+                        : (e.getCurrentStatus() != null ? e.getCurrentStatus().getStatus().toString() : "N/A"))
+                .total(e.getTotal())
+                .itemCount(e.getItems() != null ? e.getItems().size() : 0)
+                .build();
+    }
 }

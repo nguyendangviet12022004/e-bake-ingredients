@@ -18,42 +18,43 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final OidcAccountUserService oidcAccountUserService;
+        private final OidcAccountUserService oidcAccountUserService;
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/cart/**").hasRole("CUSTOMER")
-                        .anyRequest().permitAll());
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests((authorize) -> authorize
+                                                .requestMatchers("/cart/**").hasRole("CUSTOMER")
+                                                .requestMatchers("/order/**").authenticated()
+                                                .anyRequest().permitAll());
 
-        http.formLogin(form -> form
-                .loginPage("/auth/login")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-                .failureUrl("/auth/login?error=true")
-                .permitAll());
+                http.formLogin(form -> form
+                                .loginPage("/auth/login")
+                                .usernameParameter("email")
+                                .passwordParameter("password")
+                                .defaultSuccessUrl("/")
+                                .failureUrl("/auth/login?error=true")
+                                .permitAll());
 
-        http.logout(
-                logout -> logout
-                        .logoutUrl("/auth/logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/auth/login?logout=true"));
+                http.logout(
+                                logout -> logout
+                                                .logoutUrl("/auth/logout")
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID")
+                                                .logoutSuccessUrl("/auth/login?logout=true"));
 
-        http.oauth2Login(
-                login -> login.userInfoEndpoint(
-                        ie -> ie.oidcUserService(oidcAccountUserService)));
+                http.oauth2Login(
+                                login -> login.userInfoEndpoint(
+                                                ie -> ie.oidcUserService(oidcAccountUserService)));
 
-        http.csrf(AbstractHttpConfigurer::disable);
+                http.csrf(AbstractHttpConfigurer::disable);
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
 }
