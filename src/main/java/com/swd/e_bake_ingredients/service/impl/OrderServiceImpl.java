@@ -192,4 +192,20 @@ public class OrderServiceImpl implements OrderService {
                 .map(OrderMapper::toSummaryDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrderDTO getOrderDetail(Integer orderId, Authentication authentication) {
+        Integer accountId = resolveAccountId(authentication);
+        if (accountId == null)
+            throw new IllegalArgumentException("Authentication required");
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (!order.getCustomer().getId().equals(accountId)) {
+            throw new IllegalArgumentException("Forbidden");
+        }
+
+        return OrderMapper.toDTO(order);
+    }
 }

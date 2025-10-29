@@ -16,4 +16,6 @@ public interface OrderService {
 
     List<OrderSummaryDTO> getOrdersForCurrentCustomer(Authentication authentication);
 
+    OrderDTO getOrderDetail(Integer orderId, Authentication authentication);
+
 }

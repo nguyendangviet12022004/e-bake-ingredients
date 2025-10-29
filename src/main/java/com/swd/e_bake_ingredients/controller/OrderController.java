@@ -57,6 +57,15 @@ public class OrderController {
         return "order/detail";
     }
 
+    @GetMapping("/detail/{orderId}")
+    public String viewOrderDetail(@PathVariable Integer orderId,
+                                  Authentication authentication,
+                                  Model model) {
+        OrderDTO order = orderService.getOrderDetail(orderId, authentication);
+        model.addAttribute("order", order);
+        return "order/detail";
+    }
+
     @GetMapping("/list/customer")
     public String listCustomerOrders(Authentication authentication, Model model) {
         List<OrderSummaryDTO> orders = orderService.getOrdersForCurrentCustomer(authentication);
