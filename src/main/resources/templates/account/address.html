@@ -1,102 +1,529 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Addresses - E-Bake Ingredients</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <style>
-    .address-card { margin-bottom: 1rem; }
-  </style>
-</head>
-<body>
-  <th:block th:replace="~{common/layout :: header}"></th:block>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Addresses - E-Bake Ingredients</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
 
-  <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4>My Addresses</h4>
-      <button class="btn btn-primary" id="toggleAddBtn">Add Address</button>
-    </div>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-    <div id="addForm" class="card p-3 mb-4" style="display:none;">
-      <form th:action="@{/account/addresses/add}" th:object="${newAddress}" method="post">
-        <div class="row g-2">
-          <div class="col-md-6">
-            <label class="form-label">Full name</label>
-            <input class="form-control" th:field="*{fullName}" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Phone</label>
-            <input class="form-control" th:field="*{phoneNumber}" required />
-          </div>
+      .container {
+        max-width: 1000px;
+      }
 
-          <div class="col-12">
-            <label class="form-label">Address line</label>
-            <input class="form-control" th:field="*{addressLine}" required />
-          </div>
+      .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideDown 0.5s ease-out;
+      }
 
-          <div class="col-md-4">
-            <label class="form-label">Ward</label>
-            <input class="form-control" th:field="*{ward}" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">District</label>
-            <input class="form-control" th:field="*{district}" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">City</label>
-            <input class="form-control" th:field="*{city}" />
-          </div>
+      .page-header h4 {
+        margin: 0;
+        color: #1f2937;
+        font-weight: 700;
+        font-size: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
 
-          <div class="col-12 mt-2">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" th:field="*{isDefault}" id="isDefault"/>
-              <label class="form-check-label" for="isDefault">Set as default address</label>
+      .page-header h4 i {
+        color: var(--primary-color);
+      }
+
+      .btn-add-address {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-add-address:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        color: white;
+      }
+
+      #addForm {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: none;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2rem;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      #addForm .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      #addForm .form-control {
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+      }
+
+      #addForm .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .form-check-input:checked {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+      }
+
+      .form-check-label {
+        font-weight: 500;
+        color: #4b5563;
+      }
+
+      .btn-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        );
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      }
+
+      .btn-secondary {
+        background: #6b7280;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: #4b5563;
+        transform: translateY(-2px);
+      }
+
+      .alert-info {
+        background: white;
+        border: 2px dashed var(--border-color);
+        border-radius: 16px;
+        color: #6b7280;
+        padding: 3rem;
+        text-align: center;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-md);
+      }
+
+      .alert-info::before {
+        content: "📭";
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .address-card {
+        margin-bottom: 1.25rem;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-md);
+        background: white;
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .address-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .address-card .card-body {
+        padding: 1.75rem;
+        position: relative;
+      }
+
+      .address-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+      }
+
+      .address-card h6 {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .address-card h6::before {
+        content: "\f007";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: var(--primary-color);
+        font-size: 0.9rem;
+      }
+
+      .address-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+      }
+
+      .info-item i {
+        color: var(--primary-color);
+        width: 20px;
+        text-align: center;
+      }
+
+      .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .badge.bg-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        ) !important;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      }
+
+      .badge.bg-success::before {
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .address-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+      }
+
+      .address-details {
+        flex: 1;
+      }
+
+      .address-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-end;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .page-header {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .address-content {
+          flex-direction: column;
+        }
+
+        .address-actions {
+          align-items: flex-start;
+          flex-direction: row;
+        }
+
+        #addForm {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Form animations */
+      .form-control:focus {
+        animation: inputFocus 0.3s ease;
+      }
+
+      @keyframes inputFocus {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .addresses-grid {
+        animation: fadeIn 0.6s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <th:block th:replace="~{common/layout :: header}"></th:block>
+
+    <div class="container mt-4 mb-5">
+      <div class="page-header">
+        <h4><i class="fas fa-map-marked-alt"></i>My Addresses</h4>
+        <button class="btn btn-add-address" id="toggleAddBtn">
+          <i class="fas fa-plus-circle"></i>
+          Add Address
+        </button>
+      </div>
+
+      <div id="addForm" class="card p-3 mb-4" style="display: none">
+        <form
+          th:action="@{/account/addresses/add}"
+          th:object="${newAddress}"
+          method="post"
+        >
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"
+                ><i class="fas fa-user me-2"></i>Full name</label
+              >
+              <input
+                class="form-control"
+                th:field="*{fullName}"
+                required
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"
+                ><i class="fas fa-phone me-2"></i>Phone</label
+              >
+              <input
+                class="form-control"
+                th:field="*{phoneNumber}"
+                required
+                placeholder="Enter phone number"
+              />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label"
+                ><i class="fas fa-map-marker-alt me-2"></i>Address line</label
+              >
+              <input
+                class="form-control"
+                th:field="*{addressLine}"
+                required
+                placeholder="Street address, P.O. box"
+              />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"
+                ><i class="fas fa-building me-2"></i>Ward</label
+              >
+              <input
+                class="form-control"
+                th:field="*{ward}"
+                placeholder="Ward"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"
+                ><i class="fas fa-map me-2"></i>District</label
+              >
+              <input
+                class="form-control"
+                th:field="*{district}"
+                placeholder="District"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"
+                ><i class="fas fa-city me-2"></i>City</label
+              >
+              <input
+                class="form-control"
+                th:field="*{city}"
+                placeholder="City"
+              />
+            </div>
+
+            <div class="col-12 mt-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  th:field="*{isDefault}"
+                  id="isDefault"
+                />
+                <label class="form-check-label" for="isDefault">
+                  <i class="fas fa-star me-2"></i>Set as default address
+                </label>
+              </div>
+            </div>
+
+            <div class="col-12 mt-4 d-flex gap-2">
+              <button class="btn btn-success" type="submit">
+                <i class="fas fa-save me-2"></i>Save Address
+              </button>
+              <button class="btn btn-secondary" type="button" id="cancelAdd">
+                <i class="fas fa-times me-2"></i>Cancel
+              </button>
             </div>
           </div>
+        </form>
+      </div>
 
-          <div class="col-12 mt-3 d-flex gap-2">
-            <button class="btn btn-success" type="submit">Save</button>
-            <button class="btn btn-secondary" type="button" id="cancelAdd">Cancel</button>
-          </div>
+      <div th:if="${addresses == null or #lists.isEmpty(addresses)}">
+        <div class="alert alert-info">
+          No saved addresses yet. Add your first address!
         </div>
-      </form>
-    </div>
+      </div>
 
-    <div th:if="${addresses == null or #lists.isEmpty(addresses)}">
-      <div class="alert alert-info">No saved addresses.</div>
-    </div>
-
-    <div th:each="addr : ${addresses}">
-      <div class="card address-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="mb-1" th:text="${addr.fullName}">Full name</h6>
-              <div class="small text-muted" th:text="${addr.phoneNumber}">Phone</div>
-              <div class="mt-2" th:text="${addr.addressLine + ', ' + (addr.ward ?: '') + (addr.district != null ? ', ' + addr.district : '') + (addr.city != null ? ', ' + addr.city : '')}">Address</div>
-            </div>
-            <div class="text-end">
-              <span class="badge bg-success" th:if="${addr.isDefault}">Default</span>
+      <div class="addresses-grid" th:each="addr : ${addresses}">
+        <div class="card address-card">
+          <div class="card-body">
+            <div class="address-content">
+              <div class="address-details">
+                <h6 th:text="${addr.fullName}">Full name</h6>
+                <div class="address-info">
+                  <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <span th:text="${addr.phoneNumber}">Phone</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span
+                      th:text="${addr.addressLine + ', ' + (addr.ward ?: '') + (addr.district != null ? ', ' + addr.district : '') + (addr.city != null ? ', ' + addr.city : '')}"
+                      >Address</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="address-actions">
+                <span class="badge bg-success" th:if="${addr.isDefault}"
+                  >Default</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-  </div>
+    <th:block th:replace="~{common/layout :: footer}"></th:block>
 
-  <th:block th:replace="~{common/layout :: footer}"></th:block>
-
-  <script>
-    document.getElementById('toggleAddBtn').addEventListener('click', function () {
-      const f = document.getElementById('addForm');
-      f.style.display = (f.style.display === 'none' || f.style.display === '') ? 'block' : 'none';
-    });
-    document.getElementById('cancelAdd').addEventListener('click', function () {
-      document.getElementById('addForm').style.display = 'none';
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script>
+      document
+        .getElementById("toggleAddBtn")
+        .addEventListener("click", function () {
+          const f = document.getElementById("addForm");
+          f.style.display =
+            f.style.display === "none" || f.style.display === ""
+              ? "block"
+              : "none";
+        });
+      document
+        .getElementById("cancelAdd")
+        .addEventListener("click", function () {
+          document.getElementById("addForm").style.display = "none";
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

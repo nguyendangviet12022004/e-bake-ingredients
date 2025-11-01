@@ -1,7 +1,224 @@
 <header th:fragment="header">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --primary-dark: #4f46e5;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --dark-bg: #1f2937;
+      --darker-bg: #111827;
+      --border-color: #e5e7eb;
+    }
+
+    /* Header Styles */
+    .navbar {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+      padding: 1rem 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 3px solid var(--primary-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        #8b5cf6 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand::before {
+      content: "\f0c2";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      -webkit-text-fill-color: var(--primary-color);
+      font-size: 1.75rem;
+    }
+
+    .navbar-brand:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.2);
+    }
+
+    .nav-link {
+      color: #e5e7eb !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 0.25rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link::before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      margin-right: 0.35rem;
+    }
+
+    .nav-link[href="/"]::before {
+      content: "\f015";
+    }
+
+    .nav-link[href="/cart"]::before {
+      content: "\f07a";
+    }
+
+    .nav-link[href*="addresses"]::before {
+      content: "\f3c5";
+    }
+
+    .nav-link[href*="order"]::before {
+      content: "\f570";
+    }
+
+    .nav-link:hover {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--primary-color) !important;
+      transform: translateY(-2px);
+    }
+
+    .nav-link.active {
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--primary-dark) 100%
+      );
+      color: white !important;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .dropdown-toggle {
+      background: rgba(99, 102, 241, 0.1);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 10px;
+      padding: 0.5rem 1.25rem !important;
+      font-weight: 600;
+    }
+
+    .dropdown-toggle::after {
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .dropdown-toggle:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .dropdown-menu {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      min-width: 220px;
+      animation: dropdownSlide 0.3s ease-out;
+    }
+
+    @keyframes dropdownSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #374151;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dropdown-item i {
+      width: 20px;
+      text-align: center;
+      color: var(--primary-color);
+      font-size: 1rem;
+    }
+
+    .dropdown-item:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        rgba(139, 92, 246, 0.1) 100%
+      );
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    .dropdown-divider {
+      margin: 0.5rem 0;
+      border-color: var(--border-color);
+    }
+
+    .navbar-toggler {
+      border: 2px solid var(--primary-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%236366f1' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        background: rgba(31, 41, 55, 0.98);
+        border-radius: 12px;
+        margin-top: 1rem;
+        padding: 1rem;
+      }
+
+      .nav-link {
+        margin: 0.25rem 0;
+      }
+
+      .profile-menu {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid rgba(99, 102, 241, 0.3);
+      }
+    }
+  </style>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="/">E-Bake Ingredients</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -38,37 +255,38 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
+              <i class="fas fa-user-circle"></i>
               Account
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <div sec:authorize="isAuthenticated()">
                 <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fas fa-sliders-h fa-fw"></i> Account</a
-                  >
+                  <a class="dropdown-item" href="#">
+                    <i class="fas fa-user-circle"></i> My Profile
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fas fa-cog fa-fw"></i>Setting</a
-                  >
+                  <a class="dropdown-item" href="#">
+                    <i class="fas fa-cog"></i> Settings
+                  </a>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a class="dropdown-item" href="/auth/logout"
-                    ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
-                  >
+                  <a class="dropdown-item" href="/auth/logout">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                  </a>
                 </li>
               </div>
               <div sec:authorize="!isAuthenticated()">
                 <li>
-                  <a class="dropdown-item" th:href="@{/auth/login}"
-                    ><i class="fas fa-sliders-h fa-fw"></i>Login</a
-                  >
+                  <a class="dropdown-item" th:href="@{/auth/login}">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" th:href="@{/auth/register}"
-                    ><i class="fas fa-cog fa-fw"></i> Register</a
-                  >
+                  <a class="dropdown-item" th:href="@{/auth/register}">
+                    <i class="fas fa-user-plus"></i> Register
+                  </a>
                 </li>
               </div>
             </ul>
@@ -78,127 +296,288 @@
     </div>
   </nav>
 </header>
+
 <footer th:fragment="footer">
-  <!-- Footer -->
-  <footer class="text-center text-lg-start bg-body-tertiary text-muted">
-    <!-- Section: Social media -->
-    <section
-      class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
-    >
-      <!-- Left -->
-      <div class="me-5 d-none d-lg-block">
-        <span>Get connected with us on social networks:</span>
-      </div>
-      <!-- Left -->
+  <style>
+    /* Footer Styles */
+    .modern-footer {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      color: #e5e7eb;
+      margin-top: auto;
+      border-top: 3px solid var(--primary-color);
+    }
 
-      <!-- Right -->
-      <div>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-google"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="fab fa-github"></i>
-        </a>
-      </div>
-      <!-- Right -->
-    </section>
-    <!-- Section: Social media -->
+    .footer-social-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 1.5rem 0;
+    }
 
-    <!-- Section: Links  -->
-    <section class="">
-      <div class="container text-center text-md-start mt-5">
-        <!-- Grid row -->
-        <div class="row mt-3">
-          <!-- Grid column -->
-          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-            <!-- Content -->
-            <h6 class="text-uppercase fw-bold mb-4">
-              <i class="fas fa-gem me-3"></i>Company name
-            </h6>
-            <p>
-              Here you can use rows and columns to organize your footer content.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </p>
+    .footer-social-section span {
+      color: #e5e7eb;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.1);
+      color: #e5e7eb !important;
+      transition: all 0.3s ease;
+      margin: 0 0.35rem;
+      border: 2px solid transparent;
+    }
+
+    .social-link:hover {
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        #8b5cf6 100%
+      );
+      color: white !important;
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .footer-links-section {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-title {
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-title i {
+      color: var(--primary-color);
+      font-size: 1.25rem;
+    }
+
+    .footer-description {
+      color: #d1d5db;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .footer-link {
+      color: #d1d5db !important;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .footer-link::before {
+      content: "\f105";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--primary-color);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--primary-color) !important;
+      padding-left: 0.5rem;
+    }
+
+    .footer-link:hover::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      color: #d1d5db;
+    }
+
+    .footer-contact-item i {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      margin-top: 0.25rem;
+      width: 20px;
+    }
+
+    .footer-copyright {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .footer-copyright-text {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .footer-copyright-link {
+      color: var(--primary-color) !important;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer-copyright-link:hover {
+      color: #8b5cf6 !important;
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .footer-social-section {
+        text-align: center;
+      }
+
+      .footer-social-section > div {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .footer-links-section {
+        padding: 2rem 0 1rem;
+      }
+
+      .footer-title {
+        margin-top: 1.5rem;
+      }
+    }
+  </style>
+
+  <footer class="modern-footer text-center text-lg-start text-muted">
+    <!-- Social media section -->
+    <section class="footer-social-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-center justify-content-lg-between align-items-center"
+        >
+          <div class="me-5 d-none d-lg-block">
+            <span
+              ><i class="fas fa-share-alt me-2"></i>Get connected with us on
+              social networks:</span
+            >
           </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">Products</h6>
-            <p>
-              <a href="#!" class="text-reset">Angular</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">React</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Vue</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Laravel</a>
-            </p>
+          <div>
+            <a href="#" class="social-link">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-google"></i>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-github"></i>
+            </a>
           </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">Useful links</h6>
-            <p>
-              <a href="#!" class="text-reset">Pricing</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Settings</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Orders</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Help</a>
-            </p>
-          </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-            <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
-            <p>
-              <i class="fas fa-envelope me-3"></i>
-              info@example.com
-            </p>
-            <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-            <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
-          </div>
-          <!-- Grid column -->
         </div>
-        <!-- Grid row -->
       </div>
     </section>
-    <!-- Section: Links  -->
+
+    <!-- Links section -->
+    <section class="footer-links-section">
+      <div class="container text-center text-md-start">
+        <div class="row">
+          <!-- Company info -->
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+            <h6 class="footer-title">
+              <i class="fas fa-layer-group"></i>
+              E-Bake Ingredients
+            </h6>
+            <p class="footer-description">
+              Your trusted source for premium baking ingredients. We provide
+              high-quality products to help you create delicious baked goods
+              with confidence.
+            </p>
+          </div>
+
+          <!-- Products -->
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+            <h6 class="footer-title">
+              <i class="fas fa-box-open"></i>
+              Products
+            </h6>
+            <p><a href="#" class="footer-link">Flour & Grains</a></p>
+            <p><a href="#" class="footer-link">Sweeteners</a></p>
+            <p><a href="#" class="footer-link">Flavorings</a></p>
+            <p><a href="#" class="footer-link">Specialty Items</a></p>
+          </div>
+
+          <!-- Useful links -->
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            <h6 class="footer-title">
+              <i class="fas fa-link"></i>
+              Quick Links
+            </h6>
+            <p><a href="#" class="footer-link">About Us</a></p>
+            <p><a href="#" class="footer-link">My Account</a></p>
+            <p>
+              <a href="/order/list/customer" class="footer-link">My Orders</a>
+            </p>
+            <p><a href="#" class="footer-link">Help Center</a></p>
+          </div>
+
+          <!-- Contact -->
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+            <h6 class="footer-title">
+              <i class="fas fa-address-book"></i>
+              Contact Us
+            </h6>
+            <div class="footer-contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Ho Chi Minh City, Vietnam</span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="fas fa-envelope"></i>
+              <span>support@ebake.com</span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="fas fa-phone"></i>
+              <span>+84 123 456 789</span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="fas fa-clock"></i>
+              <span>Mon - Fri: 8AM - 8PM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Copyright -->
-    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05)">
-      © 2021 Copyright:
-      <a class="text-reset fw-bold" href="https://mdbootstrap.com/"
-        >MDBootstrap.com</a
-      >
+    <div class="footer-copyright text-center">
+      <div class="container">
+        <p class="footer-copyright-text">
+          © 2025 Copyright:
+          <a class="footer-copyright-link" href="/">E-Bake Ingredients</a>
+          • Made with <i class="fas fa-heart" style="color: #ef4444"></i> in
+          Vietnam
+        </p>
+      </div>
     </div>
-    <!-- Copyright -->
   </footer>
-  <!-- Footer -->
 </footer>

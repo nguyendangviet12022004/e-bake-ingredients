@@ -3,91 +3,525 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home page</title>
+    <title>Login - E-Bake Ingredients</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .login-wrapper {
+        width: 100%;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      .row {
+        margin: 0;
+        width: 100%;
+      }
+
+      .login-card {
+        background: white;
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: var(--shadow-xl);
+        border: none;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .login-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 50%,
+          #8b5cf6 100%
+        );
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+
+      .login-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .login-header h2 i {
+        color: var(--primary-color);
+        font-size: 1.75rem;
+      }
+
+      .login-header p {
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .alert {
+        border-radius: 12px;
+        border: none;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: slideDown 0.4s ease-out;
+        font-weight: 500;
+        word-wrap: break-word;
+      }
+
+      .alert::before {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid var(--danger-color);
+      }
+
+      .alert-danger::before {
+        content: "\f06a";
+        color: var(--danger-color);
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid var(--success-color);
+      }
+
+      .alert-success::before {
+        content: "\f058";
+        color: var(--success-color);
+      }
+
+      .mb-3 {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-label i {
+        color: var(--primary-color);
+        font-size: 0.875rem;
+      }
+
+      .form-control {
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: #fafafa;
+        width: 100%;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        background: white;
+        transform: translateY(-1px);
+      }
+
+      .form-control:hover {
+        border-color: #d1d5db;
+      }
+
+      .form-check {
+        padding-left: 1.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .form-check-input:checked {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+      }
+
+      .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      .form-check-label {
+        font-weight: 500;
+        color: #4b5563;
+        cursor: pointer;
+        margin-left: 0.5rem;
+      }
+
+      .d-grid {
+        display: grid;
+        width: 100%;
+      }
+
+      .gap-2 {
+        gap: 0.75rem;
+      }
+
+      .btn {
+        padding: 0.875rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          #4338ca 100%
+        );
+        color: white;
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ea4335 0%, #d33426 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
+      }
+
+      .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+        background: linear-gradient(135deg, #d33426 0%, #c5221f 100%);
+        color: white;
+      }
+
+      .btn i {
+        font-size: 1.1rem;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.5rem 0;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .divider span {
+        padding: 0 1rem;
+        background: white;
+        white-space: nowrap;
+      }
+
+      .login-footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border-color);
+      }
+
+      .login-footer p {
+        margin-bottom: 0.75rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+      }
+
+      .login-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .login-footer a:hover {
+        color: var(--primary-dark);
+      }
+
+      .login-footer a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+      }
+
+      .login-footer a:hover::after {
+        width: 100%;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .login-card {
+          padding: 2rem 1.5rem;
+          border-radius: 20px;
+        }
+
+        .login-header h2 {
+          font-size: 1.5rem;
+        }
+
+        .login-header h2 i {
+          font-size: 1.375rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .login-card {
+          padding: 1.75rem 1.25rem;
+        }
+
+        .login-header h2 {
+          font-size: 1.35rem;
+        }
+
+        .form-control {
+          font-size: 16px; /* Prevents zoom on iOS */
+        }
+      }
+    </style>
   </head>
   <body>
     <th:block th:replace="~{common/layout :: header}"></th:block>
-    <div class="container mt-5">
+
+    <div class="container">
       <div class="row justify-content-center">
-        <div class="col-md-6">
-          <h2 class="text-center mb-4">Login</h2>
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+          <div class="login-wrapper">
+            <div class="login-card">
+              <div class="login-header">
+                <h2>
+                  <i class="fas fa-lock"></i>
+                  Welcome Back
+                </h2>
+                <p>Sign in to your account to continue</p>
+              </div>
 
-          <div th:if="${param.error}" class="alert alert-danger">
-            Invalid email or password.
-          </div>
-          <div th:if="${param.logout}" class="alert alert-success">
-            You have been logged out.
-          </div>
+              <div th:if="${param.error}" class="alert alert-danger">
+                Invalid email or password.
+              </div>
 
-          <div
-            th:if="${param.success}"
-            class="alert alert-success"
-            role="alert"
-          >
-            Register successfully
-          </div>
+              <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out successfully.
+              </div>
 
-          <form th:action="@{/auth/login}" method="post">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                required
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                required
-              />
-            </div>
-
-            <div class="mb-3 form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="remember-me"
-                name="remember-me"
-              />
-              <label class="form-check-label" for="remember-me"
-                >Remember me</label
+              <div
+                th:if="${param.success}"
+                class="alert alert-success"
+                role="alert"
               >
-            </div>
+                Registration successful! Please login.
+              </div>
 
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary">Login</button>
-            </div>
+              <form th:action="@{/auth/login}" method="post">
+                <div class="mb-3">
+                  <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                    autocomplete="email"
+                  />
+                </div>
 
-            <div class="d-grid gap-2 mt-3">
-              <a href="/oauth2/authorization/google" class="btn btn-danger">
-                <i class="bi bi-google"></i> Login with Google
-              </a>
-            </div>
-          </form>
+                <div class="mb-3">
+                  <label for="password" class="form-label">
+                    <i class="fas fa-key"></i>
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                  />
+                </div>
 
-          <div class="text-center mt-3">
-            <p>
-              Don't have an account?
-              <a th:href="@{/auth/register}">Register here</a>
-            </p>
-            <p><a th:href="@{/auth/forgot-password}">Forgot Password?</a></p>
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="remember-me"
+                    name="remember-me"
+                  />
+                  <label class="form-check-label" for="remember-me">
+                    Remember me for 30 days
+                  </label>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                  </button>
+                </div>
+
+                <div class="divider">
+                  <span>OR CONTINUE WITH</span>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <a href="/oauth2/authorization/google" class="btn btn-danger">
+                    <i class="fab fa-google"></i>
+                    Sign in with Google
+                  </a>
+                </div>
+              </form>
+
+              <div class="login-footer">
+                <p>
+                  Don't have an account?
+                  <a th:href="@{/auth/register}">Create Account</a>
+                </p>
+                <p>
+                  <a th:href="@{/auth/forgot-password}">
+                    <i class="fas fa-question-circle"></i>
+                    Forgot Password?
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
     <th:block th:replace="~{common/layout :: footer}"></th:block>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

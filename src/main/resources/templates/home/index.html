@@ -3,27 +3,651 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>E-Bake Ingredients</title>
+    <title>E-Bake Ingredients - Premium Baking Supplies</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-      .card-img-top {
-        height: 200px;
-        object-fit: cover;
+      :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
       }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .container-fluid {
+        padding: 2rem;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      /* Filter Sidebar */
+      .filter-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        border: none;
+        position: sticky;
+        top: 100px;
+        animation: slideInLeft 0.5s ease-out;
+      }
+
+      .filter-card .card-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        border-radius: 16px 16px 0 0 !important;
+        padding: 1.25rem;
+        border: none;
+      }
+
+      .filter-card .card-header h5 {
+        margin: 0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-card .card-header h5::before {
+        content: "\f0b0";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .filter-card .card-body {
+        padding: 1.5rem;
+      }
+
+      .filter-section {
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-section .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-section .form-label i {
+        color: var(--primary-color);
+      }
+
+      .filter-scroll {
+        max-height: 200px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+      }
+
+      .filter-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .filter-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .filter-scroll::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 10px;
+      }
+
+      .form-check {
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-check:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .form-check {
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        display: flex !important;
+        align-items: center;
+      }
+
+      .form-check:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0 !important;
+        flex-shrink: 0;
+        display: block !important;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: white;
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+      }
+
+      .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        outline: none;
+      }
+
+      .form-check-label {
+        cursor: pointer;
+        color: #4b5563;
+        font-weight: 500;
+        margin-left: 0.75rem !important;
+        flex: 1;
+        user-select: none;
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .form-check-label {
+        cursor: pointer;
+        color: #4b5563;
+        font-weight: 500;
+        margin-left: 0.5rem;
+      }
+
+      .price-range-inputs .input-group {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .price-range-inputs .form-control {
+        border: 2px solid var(--border-color);
+        padding: 0.75rem;
+        font-weight: 500;
+      }
+
+      .price-range-inputs .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .price-range-inputs .input-group-text {
+        background: var(--bg-light);
+        border: 2px solid var(--border-color);
+        font-weight: 600;
+        color: #6b7280;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-secondary {
+        background: #6b7280;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: #4b5563;
+        transform: translateY(-2px);
+      }
+
+      /* Product Cards */
       .product-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        border: none;
+        transition: all 0.3s ease;
         height: 100%;
+        animation: fadeInUp 0.5s ease-out;
       }
+
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .product-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        height: 240px;
+        background: var(--bg-light);
+      }
+
+      .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .product-card:hover .card-img-top {
+        transform: scale(1.1);
+      }
+
       .discount-badge {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #dc3545;
+        top: 12px;
+        right: 12px;
+        background: linear-gradient(
+          135deg,
+          var(--danger-color) 0%,
+          #dc2626 100%
+        );
         color: white;
-        padding: 5px 10px;
-        border-radius: 3px;
+        padding: 0.5rem 0.875rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        z-index: 10;
+      }
+
+      .discount-badge::before {
+        content: "\f02b";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .stock-badge-overlay {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 10;
+      }
+
+      .badge {
+        padding: 0.5rem 0.875rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .badge.bg-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        ) !important;
+      }
+
+      .badge.bg-success::before {
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .badge.bg-danger {
+        background: linear-gradient(
+          135deg,
+          var(--danger-color) 0%,
+          #dc2626 100%
+        ) !important;
+      }
+
+      .badge.bg-danger::before {
+        content: "\f00d";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .product-card .card-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .card-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex-grow: 1;
+      }
+
+      .price-section {
+        background: var(--bg-light);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .original-price {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-right: 0.5rem;
+      }
+
+      .discounted-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--danger-color);
+      }
+
+      .regular-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .unit-price-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 0.35rem;
+      }
+
+      .btn-outline-primary {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-primary:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-add-to-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-add-to-cart::before {
+        content: "\f07a";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .btn-add-to-cart:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      /* No products alert */
+      .alert-info {
+        background: white;
+        border: 2px dashed var(--border-color);
+        border-radius: 16px;
+        color: #6b7280;
+        padding: 3rem;
+        text-align: center;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-md);
+      }
+
+      .alert-info::before {
+        content: "\f06a";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        display: block;
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      /* Pagination */
+      .pagination-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        margin-top: 2rem;
+      }
+
+      .pagination {
+        margin: 0;
+        gap: 0.5rem;
+      }
+
+      .page-item .page-link {
+        border: 2px solid var(--border-color);
+        color: #4b5563;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .page-item .page-link:hover {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      .page-item.active .page-link {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .page-item.disabled .page-link {
+        background: #f3f4f6;
+        border-color: var(--border-color);
+        color: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      .pagination-info {
+        color: #6b7280;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .pagination-info::before {
+        content: "\f05a";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: var(--primary-color);
+      }
+
+      /* Toast notifications */
+      .toast-notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-xl);
+        animation: slideInRight 0.3s ease-out;
+        border: none;
+        overflow: hidden;
+      }
+
+      .toast-notification.alert-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        );
+        color: white;
+        border-left: 4px solid #047857;
+      }
+
+      .toast-notification.alert-danger {
+        background: linear-gradient(
+          135deg,
+          var(--danger-color) 0%,
+          #dc2626 100%
+        );
+        color: white;
+        border-left: 4px solid #b91c1c;
+      }
+
+      .toast-notification::before {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+      }
+
+      .toast-notification.alert-success::before {
+        content: "\f00c";
+      }
+
+      .toast-notification.alert-danger::before {
+        content: "\f071";
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container-fluid {
+          padding: 1rem;
+        }
+
+        .filter-card {
+          position: relative;
+          top: 0;
+          margin-bottom: 2rem;
+        }
+
+        .product-image-wrapper {
+          height: 200px;
+        }
+
+        .toast-notification {
+          right: 10px;
+          left: 10px;
+          min-width: auto;
+        }
       }
     </style>
   </head>
@@ -33,15 +657,20 @@
     <div class="container-fluid mt-4">
       <div class="row">
         <!-- Filters Sidebar -->
-        <div class="col-md-3 mb-4">
-          <div class="card">
-            <div class="card-header"><h5 class="mb-0">Filters</h5></div>
+        <div class="col-lg-3 col-md-4 mb-4">
+          <div class="card filter-card">
+            <div class="card-header">
+              <h5 class="mb-0">Filters</h5>
+            </div>
             <div class="card-body">
               <form id="filterForm" method="get" th:action="@{/}">
                 <!-- Category Filter -->
-                <div class="mb-3">
-                  <label class="form-label">Categories</label>
-                  <div class="overflow-auto" style="max-height: 200px">
+                <div class="filter-section mb-3">
+                  <label class="form-label">
+                    <i class="fas fa-layer-group"></i>
+                    Categories
+                  </label>
+                  <div class="filter-scroll">
                     <div class="form-check" th:each="category : ${categories}">
                       <input
                         class="form-check-input"
@@ -49,7 +678,7 @@
                         th:name="categoryIds"
                         th:value="${category.id}"
                         th:id="${'category-' + category.id}"
-                        th:checked="${categoryIds != null and categoryIds.contains( category.id)}"
+                        th:checked="${categoryIds != null and categoryIds.contains(category.id)}"
                       />
                       <label
                         class="form-check-label"
@@ -62,9 +691,12 @@
                 </div>
 
                 <!-- Brand Filter -->
-                <div class="mb-3">
-                  <label class="form-label">Brands</label>
-                  <div class="overflow-auto" style="max-height: 200px">
+                <div class="filter-section mb-3">
+                  <label class="form-label">
+                    <i class="fas fa-certificate"></i>
+                    Brands
+                  </label>
+                  <div class="filter-scroll">
                     <div class="form-check" th:each="brand : ${brands}">
                       <input
                         class="form-check-input"
@@ -72,7 +704,7 @@
                         th:name="brandIds"
                         th:value="${brand.id}"
                         th:id="${'brand-' + brand.id}"
-                        th:checked="${brandIds != null and brandIds.contains( brand.id)}"
+                        th:checked="${brandIds != null and brandIds.contains(brand.id)}"
                       />
                       <label
                         class="form-check-label"
@@ -85,32 +717,42 @@
                 </div>
 
                 <!-- Price Range -->
-                <div class="mb-3">
-                  <label class="form-label">Price Range</label>
-                  <div class="input-group mb-2">
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="minPrice"
-                      placeholder="Min"
-                      min="0"
-                      th:value="${param.minPrice != null ? param.minPrice : ''}"
-                    />
-                    <span class="input-group-text">-</span>
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="maxPrice"
-                      placeholder="Max"
-                      min="0"
-                      th:value="${param.maxPrice != null ? param.maxPrice : ''}"
-                    />
+                <div class="filter-section mb-4">
+                  <label class="form-label">
+                    <i class="fas fa-dollar-sign"></i>
+                    Price Range
+                  </label>
+                  <div class="price-range-inputs">
+                    <div class="input-group mb-2">
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="minPrice"
+                        placeholder="Min"
+                        min="0"
+                        th:value="${param.minPrice != null ? param.minPrice : ''}"
+                      />
+                      <span class="input-group-text">-</span>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="maxPrice"
+                        placeholder="Max"
+                        min="0"
+                        th:value="${param.maxPrice != null ? param.maxPrice : ''}"
+                      />
+                    </div>
                   </div>
                 </div>
+
                 <!-- Buttons -->
                 <div class="d-grid gap-2">
-                  <button type="submit" class="btn btn-primary">Filter</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-2"></i>Apply Filters
+                  </button>
+                  <button type="reset" class="btn btn-secondary">
+                    <i class="fas fa-redo me-2"></i>Reset
+                  </button>
                 </div>
               </form>
             </div>
@@ -118,95 +760,92 @@
         </div>
 
         <!-- Products Grid -->
-        <div class="col-md-9">
-          <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col-lg-9 col-md-8">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
             <div class="col" th:each="product : ${products}">
-              <div class="card h-100 product-card position-relative">
-                <span
-                  class="discount-badge"
-                  th:if="${product.discount > 0}"
-                  th:text="${#numbers.formatDecimal(product.discount * 100, 0, 0)} + '%'"
-                  >-10%</span
-                >
+              <div class="card product-card position-relative">
+                <div class="product-image-wrapper">
+                  <span
+                    class="discount-badge"
+                    th:if="${product.discount > 0}"
+                    th:text="${#numbers.formatDecimal(product.discount * 100, 0, 0)} + '%'"
+                    >-10%</span
+                  >
 
-                <!-- image: first or default -->
-                <img
-                  class="card-img-top"
-                  th:if="${product.images != null and !#lists.isEmpty(product.images)}"
-                  th:src="${product.images[0].src}"
-                  th:alt="${product.images[0].altText}"
-                />
-                <img
-                  class="card-img-top"
-                  th:unless="${product.images != null and !#lists.isEmpty(product.images)}"
-                  th:src="@{/images/default-product.jpg}"
-                  alt="Default product image"
-                />
+                  <!-- Stock badge overlay -->
+                  <div class="stock-badge-overlay">
+                    <span class="badge bg-success" th:if="${product.stock > 0}"
+                      >In Stock</span
+                    >
+                    <span
+                      class="badge bg-danger"
+                      th:unless="${product.stock > 0}"
+                      >Out of Stock</span
+                    >
+                  </div>
 
-                <div class="card-body d-flex flex-column">
+                  <!-- Product image -->
+                  <img
+                    class="card-img-top"
+                    th:if="${product.images != null and !#lists.isEmpty(product.images)}"
+                    th:src="${product.images[0].src}"
+                    th:alt="${product.images[0].altText}"
+                  />
+                  <img
+                    class="card-img-top"
+                    th:unless="${product.images != null and !#lists.isEmpty(product.images)}"
+                    th:src="@{/images/default-product.jpg}"
+                    alt="Default product image"
+                  />
+                </div>
+
+                <div class="card-body">
                   <h5 class="card-title" th:text="${product.name}">
                     Product Name
                   </h5>
-                  <p
-                    class="card-text text-truncate"
-                    th:text="${product.description}"
-                  >
+                  <p class="card-text" th:text="${product.description}">
                     Description
                   </p>
 
-                  <div class="mt-auto">
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <div>
-                        <div th:if="${product.discount > 0}">
-                          <small
-                            class="text-muted text-decoration-line-through me-2"
-                            th:text="${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
-                            >50.00</small
-                          >
-                          <span
-                            class="fw-bold text-danger"
-                            th:text="${#numbers.formatDecimal(product.unitPrice * (1 - product.discount), 0, 'COMMA', 2, 'POINT')}"
-                            >45.00</span
-                          >
-                        </div>
-                        <div th:unless="${product.discount > 0}">
-                          <span
-                            class="fw-bold"
-                            th:text="${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
-                            >50.00</span
-                          >
-                        </div>
-                        <div
-                          class="small text-muted"
-                          th:if="${product.unitPrice != 0}"
-                          th:text="'Unit price: ' + ${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
-                        ></div>
-                      </div>
-
+                  <div class="price-section">
+                    <div th:if="${product.discount > 0}">
                       <div>
                         <span
-                          class="badge bg-success"
-                          th:if="${product.stock > 0}"
-                          >In Stock</span
+                          class="original-price"
+                          th:text="'$' + ${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                          >$50.00</span
                         >
                         <span
-                          class="badge bg-danger"
-                          th:unless="${product.stock > 0}"
-                          >Out of Stock</span
+                          class="discounted-price"
+                          th:text="'$' + ${#numbers.formatDecimal(product.unitPrice * (1 - product.discount), 0, 'COMMA', 2, 'POINT')}"
+                          >$45.00</span
                         >
                       </div>
                     </div>
+                    <div th:unless="${product.discount > 0}">
+                      <span
+                        class="regular-price"
+                        th:text="'$' + ${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                        >$50.00</span
+                      >
+                    </div>
+                    <div
+                      class="unit-price-label"
+                      th:if="${product.unitPrice != 0}"
+                      th:text="'Unit price: $' + ${#numbers.formatDecimal(product.unitPrice, 0, 'COMMA', 2, 'POINT')}"
+                    ></div>
+                  </div>
 
+                  <div class="d-grid gap-2">
                     <a
                       th:href="@{/product/{id}(id=${product.id})}"
-                      class="btn btn-outline-primary w-100 mb-2"
-                      >View</a
+                      class="btn btn-outline-primary"
                     >
+                      <i class="fas fa-eye me-2"></i>View Details
+                    </a>
                     <button
                       sec:authorize="hasRole('CUSTOMER')"
-                      class="btn btn-primary w-100 btn-add-to-cart"
+                      class="btn btn-primary btn-add-to-cart"
                       th:disabled="${product.stock <= 0}"
                       th:data-product-id="${product.id}"
                     >
@@ -216,62 +855,77 @@
                 </div>
               </div>
             </div>
-            <!-- if no products -->
+
+            <!-- No products found -->
             <div
               class="col-12"
               th:if="${products == null or #lists.isEmpty(products)}"
             >
-              <div class="alert alert-info">No products found.</div>
+              <div class="alert alert-info">
+                No products found matching your criteria. Try adjusting your
+                filters!
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            class="pagination-wrapper"
+            th:if="${page != null and page.totalPages > 0}"
+          >
+            <div
+              class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+            >
+              <div class="pagination-info">
+                <span
+                  th:text="'Showing ' + (${page.number} * ${page.size} + 1) + ' - ' + (${page.number} * ${page.size} + ${products.size()}) + ' of ' + ${page.totalElements} + ' products'"
+                  >Showing 1 - 9 of 42 products</span
+                >
+              </div>
+
+              <nav>
+                <ul class="pagination mb-0">
+                  <li
+                    class="page-item"
+                    th:classappend="${page.first} ? 'disabled'"
+                  >
+                    <a
+                      class="page-link"
+                      th:href="@{/(page=${page.number - 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                    >
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                  </li>
+
+                  <li
+                    class="page-item"
+                    th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:classappend="${i == page.number} ? 'active'"
+                  >
+                    <a
+                      class="page-link"
+                      th:text="${i + 1}"
+                      th:href="@{/(page=${i}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                      >1</a
+                    >
+                  </li>
+
+                  <li
+                    class="page-item"
+                    th:classappend="${page.last} ? 'disabled'"
+                  >
+                    <a
+                      class="page-link"
+                      th:href="@{/(page=${page.number + 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                    >
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- Pagination -->
-    <div class="row mt-4" th:if="${page != null and page.totalPages > 0}">
-      <div class="col-12 d-flex justify-content-between align-items-center">
-        <div>
-          <small
-            class="text-muted"
-            th:text="'Showing ' + (${page.number} * ${page.size} + 1) + ' - ' + (${page.number} * ${page.size} + ${products.size()}) + ' of ' + ${page.totalElements}"
-            >Showing 1 - 9 of 42</small
-          >
-        </div>
-
-        <nav>
-          <ul class="pagination mb-0">
-            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
-              <a
-                class="page-link"
-                th:href="@{/(page=${page.number - 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-                aria-label="Previous"
-                >Previous</a
-              >
-            </li>
-
-            <li
-              class="page-item"
-              th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-              th:classappend="${i == page.number} ? 'active'"
-            >
-              <a
-                class="page-link"
-                th:text="${i + 1}"
-                th:href="@{/(page=${i}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-                >1</a
-              >
-            </li>
-
-            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
-              <a
-                class="page-link"
-                th:href="@{/(page=${page.number + 1}, size=${page.size}, categoryIds=${categoryIds}, brandIds=${brandIds}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-                aria-label="Next"
-                >Next</a
-              >
-            </li>
-          </ul>
-        </nav>
       </div>
     </div>
 
@@ -279,21 +933,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // submit form after reset so filters clear
+      // Reset form handler
       document
         .getElementById("filterForm")
         .addEventListener("reset", function (e) {
           e.preventDefault();
           window.location.href = "/";
         });
-    </script>
-    <script>
+
+      // Add to cart functionality
       document.addEventListener("DOMContentLoaded", function () {
         const buttons = document.querySelectorAll(".btn-add-to-cart");
 
         buttons.forEach((btn) => {
           btn.addEventListener("click", async function () {
             const productId = this.dataset.productId;
+            const originalText = this.innerHTML;
+
+            // Loading state
+            this.innerHTML =
+              '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+            this.disabled = true;
 
             try {
               const response = await fetch(`/cart/add?productId=${productId}`, {
@@ -301,30 +961,35 @@
               });
               const data = await response.json();
 
-              // Hiển thị thông báo (Bootstrap alert)
-              showSuccessAlert(data.message || "Added to cart!");
+              showToast(
+                data.message || "Product added to cart successfully!",
+                "success"
+              );
+
+              // Reset button after a delay
+              setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+              }, 1000);
             } catch (error) {
               console.error("Error adding to cart:", error);
-              showErrorAlert("Something went wrong!");
+              showToast("Something went wrong! Please try again.", "danger");
+              this.innerHTML = originalText;
+              this.disabled = false;
             }
           });
         });
 
-        function showSuccessAlert(message) {
-          const alert = document.createElement("div");
-          alert.className =
-            "alert alert-success position-fixed top-0 end-0 m-3";
-          alert.textContent = message;
-          document.body.appendChild(alert);
-          setTimeout(() => alert.remove(), 2000);
-        }
+        function showToast(message, type) {
+          const toast = document.createElement("div");
+          toast.className = `alert alert-${type} toast-notification`;
+          toast.textContent = message;
+          document.body.appendChild(toast);
 
-        function showErrorAlert(message) {
-          const alert = document.createElement("div");
-          alert.className = "alert alert-danger position-fixed top-0 end-0 m-3";
-          alert.textContent = message;
-          document.body.appendChild(alert);
-          setTimeout(() => alert.remove(), 2000);
+          setTimeout(() => {
+            toast.style.animation = "slideInRight 0.3s ease-out reverse";
+            setTimeout(() => toast.remove(), 300);
+          }, 3000);
         }
       });
     </script>

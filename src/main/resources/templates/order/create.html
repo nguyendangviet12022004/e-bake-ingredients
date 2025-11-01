@@ -1,103 +1,816 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create order - E-Bake Ingredients</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <style>
-    .product-img { width: 80px; height: 80px; object-fit: cover; }
-  </style>
-</head>
-<body>
-  <th:block th:replace="~{common/layout :: header}"></th:block>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Order - E-Bake Ingredients</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --info-color: #3b82f6;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
 
-  <div class="container mt-4">
-    <h4>Create Order</h4>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card mb-3">
-          <div class="card-header">Items</div>
-          <div class="card-body">
-            <div th:if="${draft.items == null or #lists.isEmpty(draft.items)}" class="alert alert-info">
-              No items selected.
-            </div>
-            <div th:each="item : ${draft.items}">
-              <div class="d-flex align-items-center mb-2">
-                <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${item.product.images[0].src}" class="product-img me-3" />
-                <img th:unless="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="@{/images/default-product.jpg}" class="product-img me-3" />
-                <div>
-                  <div th:text="${item.product.name}">Product name</div>
-                  <small class="text-muted" th:text="'Qty: ' + ${item.quantity}">Qty</small>
-                </div>
-                <div class="ms-auto fw-bold" th:text="${#numbers.formatDecimal(item.subtotal,0,'COMMA',2,'POINT')}">$0.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      .container {
+        max-width: 1400px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+      }
 
-        <div class="card mb-3">
-          <div class="card-header">Shipping address</div>
-          <div class="card-body">
-            <form th:action="@{/order/create}" th:object="${createDto}" method="post">
-              <div th:each="addr : ${addresses}">
-                <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" th:field="*{addressId}" th:value="${addr.id}" th:id="${'addr-' + addr.id}" />
-                  <label class="form-check-label" th:for="${'addr-' + addr.id}">
-                    <strong th:text="${addr.fullName}">Name</strong> - <span th:text="${addr.phoneNumber}">Phone</span><br/>
-                    <span th:text="${addr.addressLine + (addr.ward != null ? ', ' + addr.ward : '') + (addr.district != null ? ', ' + addr.district : '') + (addr.city != null ? ', ' + addr.city : '')}">Full address</span>
-                    <span class="badge bg-success ms-2" th:if="${addr.isDefault}">Default</span>
-                  </label>
-                </div>
-              </div>
+      /* Page Header */
+      .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+        animation: slideDown 0.5s ease-out;
+      }
 
-              <div class="mt-3">
-                <div class="mb-2">Payment method</div>
-                <div th:each="pm : ${paymentMethods}">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" th:field="*{paymentMethod}" th:value="${pm.name()}" th:id="${'pm-' + pm.name()}" />
-                    <label class="form-check-label" th:for="${'pm-' + pm.name()}" th:text="${pm.name()}">PM</label>
-                  </div>
-                </div>
-              </div>
+      .page-header h4 {
+        margin: 0;
+        color: #1f2937;
+        font-weight: 700;
+        font-size: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
 
-              <!-- include selected ids as hidden inputs -->
-              <div th:if="${createDto.selectedItemIds != null}">
-                <input type="hidden" th:each="id : ${createDto.selectedItemIds}" name="selectedItemIds" th:value="${id}" />
-              </div>
+      .page-header h4 i {
+        color: var(--primary-color);
+      }
 
-              <div class="mt-4 d-flex justify-content-between align-items-center">
-                <div>
-                  <small class="text-muted">Order total</small>
-                  <div class="fs-5 fw-bold" th:text="${#numbers.formatDecimal(draft.total,0,'COMMA',2,'POINT')}">$0.00</div>
-                </div>
-                <button class="btn btn-primary" type="submit">Place order</button>
-              </div>
-            </form>
-          </div>
+      .breadcrumb-custom {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+
+      .breadcrumb-custom i {
+        color: var(--primary-color);
+      }
+
+      /* Cards */
+      .modern-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        border: none;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
+        margin-bottom: 1.5rem;
+      }
+
+      .modern-card .card-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        font-weight: 700;
+        padding: 1.25rem 1.5rem;
+        border: none;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .modern-card .card-header i {
+        font-size: 1.25rem;
+      }
+
+      .modern-card .card-body {
+        padding: 1.5rem;
+      }
+
+      /* Product Items */
+      .product-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.75rem;
+        border: 2px solid var(--border-color);
+      }
+
+      .product-item:hover {
+        background: var(--bg-light);
+        border-color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      .product-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid var(--border-color);
+        transition: all 0.3s ease;
+      }
+
+      .product-item:hover .product-img {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-md);
+      }
+
+      .product-details {
+        flex: 1;
+        margin-left: 1rem;
+      }
+
+      .product-name {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.35rem;
+        font-size: 1rem;
+      }
+
+      .product-qty {
+        color: #6b7280;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .product-qty i {
+        color: var(--primary-color);
+      }
+
+      .product-subtotal {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--success-color);
+        white-space: nowrap;
+      }
+
+      .product-subtotal::before {
+        content: "$";
+        font-size: 1rem;
+        margin-right: 0.15rem;
+      }
+
+      /* No Items Alert */
+      .alert-info {
+        background: var(--bg-light);
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        color: #6b7280;
+        padding: 2rem;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .alert-info::before {
+        content: "\f06a";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        display: block;
+        font-size: 2.5rem;
+        color: var(--info-color);
+        margin-bottom: 0.75rem;
+      }
+
+      /* Address Selection */
+      .address-option {
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .address-option:hover {
+        border-color: var(--primary-color);
+        background: rgba(99, 102, 241, 0.05);
+        transform: translateX(5px);
+      }
+
+      .address-option input[type="radio"]:checked ~ * {
+        color: var(--primary-color);
+      }
+
+      .address-option input[type="radio"]:checked {
+        accent-color: var(--primary-color);
+      }
+
+      .form-check-input[type="radio"] {
+        width: 1.35rem;
+        height: 1.35rem;
+        cursor: pointer;
+        border: 2px solid var(--border-color);
+      }
+
+      .form-check-input[type="radio"]:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .address-name {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .address-name i {
+        color: var(--primary-color);
+      }
+
+      .address-phone {
+        color: #6b7280;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-top: 0.25rem;
+      }
+
+      .address-phone i {
+        color: var(--primary-color);
+      }
+
+      .address-full {
+        color: #4b5563;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .address-full i {
+        color: var(--primary-color);
+        margin-top: 0.25rem;
+      }
+
+      .badge.bg-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        ) !important;
+        padding: 0.35rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .badge.bg-success::before {
+        content: "\f005";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      /* Payment Method */
+      .payment-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border-color);
+      }
+
+      .payment-section-title {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .payment-section-title i {
+        color: var(--primary-color);
+      }
+
+      .payment-option {
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .payment-option:hover {
+        border-color: var(--primary-color);
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .payment-option input[type="radio"]:checked ~ * {
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .payment-label {
+        flex: 1;
+        font-weight: 500;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .payment-label i {
+        font-size: 1.25rem;
+        color: var(--primary-color);
+      }
+
+      /* Order Total Section */
+      .order-total-section {
+        background: var(--bg-light);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 2px solid var(--border-color);
+      }
+
+      .total-label-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .total-label {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .total-label i {
+        color: var(--primary-color);
+      }
+
+      .total-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--success-color);
+      }
+
+      .total-amount::before {
+        content: "$";
+        font-size: 1.5rem;
+        margin-right: 0.25rem;
+      }
+
+      .btn-place-order {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        );
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-place-order:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        color: white;
+      }
+
+      .btn-place-order::after {
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 1.1rem;
+      }
+
+      /* Order Summary Sidebar */
+      .summary-card {
+        position: sticky;
+        top: 100px;
+      }
+
+      .summary-card .card-body {
+        padding: 1.75rem;
+      }
+
+      .summary-title {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1.15rem;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .summary-title i {
+        color: var(--primary-color);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.875rem 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+        border-top: 2px solid var(--border-color);
+      }
+
+      .summary-label {
+        color: #6b7280;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .summary-label i {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+      }
+
+      .summary-value {
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .summary-row:last-child .summary-label {
+        color: #1f2937;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .summary-row:last-child .summary-value {
+        color: var(--success-color);
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      .summary-row:last-child .summary-value::before {
+        content: "$";
+        font-size: 1.2rem;
+      }
+
+      /* Animations */
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .page-header h4 {
+          font-size: 1.5rem;
+        }
+
+        .product-item {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .product-details {
+          margin-left: 0;
+          margin-top: 1rem;
+        }
+
+        .product-subtotal {
+          margin-top: 0.5rem;
+        }
+
+        .order-total-section {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .btn-place-order {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .summary-card {
+          position: relative;
+          top: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <th:block th:replace="~{common/layout :: header}"></th:block>
+
+    <div class="container mt-4">
+      <div class="page-header">
+        <h4>
+          <i class="fas fa-file-invoice"></i>
+          Create New Order
+        </h4>
+        <div class="breadcrumb-custom">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>Cart</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>Checkout</span>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h6>Order summary</h6>
-            <div class="d-flex justify-content-between">
-              <div>Items</div>
-              <div th:text="${draft.items.size()}">0</div>
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Order Items -->
+          <div class="modern-card">
+            <div class="card-header">
+              <i class="fas fa-shopping-bag"></i>
+              Order Items
             </div>
-            <div class="d-flex justify-content-between mt-2">
-              <div>Total</div>
-              <div class="fw-bold" th:text="${#numbers.formatDecimal(draft.total,0,'COMMA',2,'POINT')}">$0.00</div>
+            <div class="card-body">
+              <div
+                th:if="${draft.items == null or #lists.isEmpty(draft.items)}"
+                class="alert alert-info"
+              >
+                No items selected. Please go back to cart and select items.
+              </div>
+              <div th:each="item : ${draft.items}" class="product-item">
+                <img
+                  th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                  th:src="${item.product.images[0].src}"
+                  class="product-img"
+                  alt="Product"
+                />
+                <img
+                  th:unless="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                  th:src="@{/images/default-product.jpg}"
+                  class="product-img"
+                  alt="Product"
+                />
+                <div class="product-details">
+                  <div class="product-name" th:text="${item.product.name}">
+                    Product name
+                  </div>
+                  <div class="product-qty">
+                    <i class="fas fa-cube"></i>
+                    <span th:text="'Quantity: ' + ${item.quantity}">Qty</span>
+                  </div>
+                </div>
+                <div
+                  class="product-subtotal"
+                  th:text="${#numbers.formatDecimal(item.subtotal,0,'COMMA',2,'POINT')}"
+                >
+                  0.00
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Address & Payment -->
+          <div class="modern-card">
+            <div class="card-header">
+              <i class="fas fa-shipping-fast"></i>
+              Shipping & Payment
+            </div>
+            <div class="card-body">
+              <form
+                th:action="@{/order/create}"
+                th:object="${createDto}"
+                method="post"
+              >
+                <!-- Addresses -->
+                <div
+                  th:each="addr : ${addresses}"
+                  class="address-option form-check"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    th:field="*{addressId}"
+                    th:value="${addr.id}"
+                    th:id="${'addr-' + addr.id}"
+                  />
+                  <label
+                    class="form-check-label w-100"
+                    th:for="${'addr-' + addr.id}"
+                  >
+                    <div class="address-name">
+                      <i class="fas fa-user"></i>
+                      <span th:text="${addr.fullName}">Name</span>
+                      <span
+                        class="badge bg-success ms-auto"
+                        th:if="${addr.isDefault}"
+                        >Default</span
+                      >
+                    </div>
+                    <div class="address-phone">
+                      <i class="fas fa-phone"></i>
+                      <span th:text="${addr.phoneNumber}">Phone</span>
+                    </div>
+                    <div class="address-full">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span
+                        th:text="${addr.addressLine + (addr.ward != null ? ', ' + addr.ward : '') + (addr.district != null ? ', ' + addr.district : '') + (addr.city != null ? ', ' + addr.city : '')}"
+                        >Full address</span
+                      >
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-section">
+                  <div class="payment-section-title">
+                    <i class="fas fa-credit-card"></i>
+                    Payment Method
+                  </div>
+                  <div
+                    th:each="pm : ${paymentMethods}"
+                    class="payment-option form-check"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      th:field="*{paymentMethod}"
+                      th:value="${pm.name()}"
+                      th:id="${'pm-' + pm.name()}"
+                    />
+                    <label
+                      class="form-check-label payment-label"
+                      th:for="${'pm-' + pm.name()}"
+                    >
+                      <i
+                        class="fas"
+                        th:classappend="${pm.name() == 'CASH_ON_DELIVERY' ? 'fa-money-bill-wave' : (pm.name() == 'CREDIT_CARD' ? 'fa-credit-card' : 'fa-wallet')}"
+                      ></i>
+                      <span th:text="${pm.name()}">Payment Method</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Hidden inputs for selected items -->
+                <div th:if="${createDto.selectedItemIds != null}">
+                  <input
+                    type="hidden"
+                    th:each="id : ${createDto.selectedItemIds}"
+                    name="selectedItemIds"
+                    th:value="${id}"
+                  />
+                </div>
+
+                <!-- Order Total & Submit -->
+                <div class="order-total-section">
+                  <div class="total-label-section">
+                    <div class="total-label">
+                      <i class="fas fa-calculator"></i>
+                      Order Total
+                    </div>
+                    <div
+                      class="total-amount"
+                      th:text="${#numbers.formatDecimal(draft.total,0,'COMMA',2,'POINT')}"
+                    >
+                      0.00
+                    </div>
+                  </div>
+                  <button class="btn-place-order" type="submit">
+                    Place Order
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="col-lg-4">
+          <div class="modern-card summary-card">
+            <div class="card-body">
+              <h6 class="summary-title">
+                <i class="fas fa-receipt"></i>
+                Order Summary
+              </h6>
+              <div class="summary-row">
+                <div class="summary-label">
+                  <i class="fas fa-box"></i>
+                  Total Items
+                </div>
+                <div
+                  class="summary-value"
+                  th:text="${draft.items != null ? draft.items.size() : 0}"
+                >
+                  0
+                </div>
+              </div>
+              <div class="summary-row">
+                <div class="summary-label">
+                  <i class="fas fa-dollar-sign"></i>
+                  Subtotal
+                </div>
+                <div
+                  class="summary-value"
+                  th:text="'$' + ${#numbers.formatDecimal(draft.total,0,'COMMA',2,'POINT')}"
+                >
+                  $0.00
+                </div>
+              </div>
+              <div class="summary-row">
+                <div class="summary-label">
+                  <i class="fas fa-truck"></i>
+                  Shipping
+                </div>
+                <div class="summary-value">Free</div>
+              </div>
+              <div class="summary-row">
+                <div class="summary-label">Total Amount</div>
+                <div
+                  class="summary-value"
+                  th:text="${#numbers.formatDecimal(draft.total,0,'COMMA',2,'POINT')}"
+                >
+                  0.00
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <th:block th:replace="~{common/layout :: footer}"></th:block>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <th:block th:replace="~{common/layout :: footer}"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

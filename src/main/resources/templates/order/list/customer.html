@@ -8,62 +8,558 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --info-color: #3b82f6;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .container {
+        max-width: 1200px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+      }
+
+      /* Page Header */
+      .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideDown 0.5s ease-out;
+      }
+
+      .page-header h4 {
+        margin: 0;
+        color: #1f2937;
+        font-weight: 700;
+        font-size: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .page-header h4 i {
+        color: var(--primary-color);
+      }
+
+      .btn-continue-shopping {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        );
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        text-decoration: none;
+      }
+
+      .btn-continue-shopping:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        color: white;
+      }
+
+      /* Alert */
+      .alert-info {
+        background: white;
+        border: 2px dashed var(--border-color);
+        border-radius: 16px;
+        color: #6b7280;
+        padding: 3rem;
+        text-align: center;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-md);
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .alert-info::before {
+        content: "\f290";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        display: block;
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      /* Orders Card */
+      .orders-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        border: none;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      /* Table Styles */
+      .table-responsive {
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .table {
+        margin: 0;
+      }
+
+      .table thead {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+      }
+
+      .table thead th {
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1.25rem 1rem;
+        border: none;
+      }
+
+      .table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .table tbody tr:hover {
+        background: rgba(99, 102, 241, 0.05);
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .table tbody td {
+        padding: 1.25rem 1rem;
+        vertical-align: middle;
+        color: #374151;
+        font-weight: 500;
+      }
+
+      /* Order ID Column */
+      .order-id {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1rem;
+      }
+
+      .order-id::before {
+        content: "#";
+        color: #9ca3af;
+      }
+
+      /* Date Column */
+      .order-date {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+      }
+
+      .order-date i {
+        color: var(--primary-color);
+      }
+
+      /* Status Badges */
+      .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .badge::before {
+        content: "\f111";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 0.6rem;
+      }
+
+      .badge.bg-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        ) !important;
+      }
+
+      .badge.bg-success {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #059669 100%
+        ) !important;
+      }
+
+      .badge.bg-warning {
+        background: linear-gradient(
+          135deg,
+          var(--warning-color) 0%,
+          #d97706 100%
+        ) !important;
+      }
+
+      .badge.bg-danger {
+        background: linear-gradient(
+          135deg,
+          var(--danger-color) 0%,
+          #dc2626 100%
+        ) !important;
+      }
+
+      .badge.bg-info {
+        background: linear-gradient(
+          135deg,
+          var(--info-color) 0%,
+          #2563eb 100%
+        ) !important;
+      }
+
+      .badge.bg-secondary {
+        background: linear-gradient(
+          135deg,
+          #6b7280 0%,
+          #4b5563 100%
+        ) !important;
+      }
+
+      /* Items Count */
+      .items-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: 700;
+        color: var(--primary-color);
+        min-width: 60px;
+      }
+
+      .items-count::before {
+        content: "\f466";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 0.5rem;
+        color: var(--primary-color);
+      }
+
+      /* Total Price */
+      .order-total {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--success-color);
+      }
+
+      .order-total::before {
+        content: "$";
+        font-size: 0.9rem;
+        margin-right: 0.15rem;
+      }
+
+      /* Action Button */
+      .btn-view-order {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        text-decoration: none;
+      }
+
+      .btn-view-order:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        color: white;
+      }
+
+      .btn-view-order::after {
+        content: "\f061";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      /* Animations */
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .page-header {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .page-header h4 {
+          font-size: 1.5rem;
+        }
+
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        /* Mobile Table - Card View */
+        .table thead {
+          display: none;
+        }
+
+        .table tbody tr {
+          display: block;
+          margin-bottom: 1rem;
+          border-radius: 12px;
+          box-shadow: var(--shadow-sm);
+          border: 1px solid var(--border-color);
+        }
+
+        .table tbody tr:hover {
+          transform: none;
+        }
+
+        .table tbody td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.875rem 1rem;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .table tbody td:last-child {
+          border-bottom: none;
+        }
+
+        .table tbody td::before {
+          content: attr(data-label);
+          font-weight: 600;
+          color: #6b7280;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+        }
+
+        .order-date {
+          flex-direction: row-reverse;
+          justify-content: flex-end;
+        }
+
+        .items-count,
+        .order-total {
+          margin-left: auto;
+        }
+
+        .btn-view-order {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Empty state enhancement */
+      .empty-orders {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .empty-orders-icon {
+        font-size: 4rem;
+        color: var(--primary-color);
+        opacity: 0.5;
+      }
+
+      .empty-orders-text {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin: 0;
+      }
+
+      .empty-orders-subtext {
+        font-size: 0.95rem;
+        color: #9ca3af;
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
     <th:block th:replace="~{common/layout :: header}"></th:block>
 
     <div class="container mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>My Orders</h4>
-        <a class="btn btn-outline-primary" th:href="@{/}">Continue shopping</a>
+      <div class="page-header">
+        <h4>
+          <i class="fas fa-shopping-bag"></i>
+          My Orders
+        </h4>
+        <a class="btn-continue-shopping" th:href="@{/}">
+          <i class="fas fa-shopping-cart"></i>
+          Continue Shopping
+        </a>
       </div>
 
       <div
         th:if="${orders == null or #lists.isEmpty(orders)}"
         class="alert alert-info"
       >
-        You have no orders yet.
+        <div class="empty-orders">
+          <i class="fas fa-box-open empty-orders-icon"></i>
+          <p class="empty-orders-text">You have no orders yet.</p>
+          <p class="empty-orders-subtext">
+            Start shopping to create your first order!
+          </p>
+        </div>
       </div>
 
-      <div class="card" th:unless="${orders == null or #lists.isEmpty(orders)}">
+      <div
+        class="card orders-card"
+        th:unless="${orders == null or #lists.isEmpty(orders)}"
+      >
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+            <thead>
               <tr>
-                <th>#</th>
-                <th>Created</th>
+                <th>Order ID</th>
+                <th>Date</th>
                 <th>Status</th>
                 <th class="text-center">Items</th>
                 <th class="text-end">Total</th>
-                <th></th>
+                <th class="text-end">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="order : ${orders}">
-                <td th:text="${order.id}">1</td>
-                <td
-                  th:text="${order.createdAt != null ? #temporals.format(order.createdAt,'dd/MM/yyyy HH:mm') : '-'}"
-                >
-                  12/09/2025
+                <td data-label="Order ID">
+                  <span class="order-id" th:text="${order.id}">1</span>
                 </td>
-                <td>
-                  <span class="badge bg-primary" th:text="${order.status}"
-                    >NEW</span
+                <td data-label="Date">
+                  <span class="order-date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span
+                      th:text="${order.createdAt != null ? #temporals.format(order.createdAt,'dd/MM/yyyy HH:mm') : '-'}"
+                    >
+                      12/09/2025
+                    </span>
+                  </span>
+                </td>
+                <td data-label="Status">
+                  <span
+                    class="badge"
+                    th:classappend="${order.status == 'NEW' ? 'bg-primary' : 
+                                   (order.status == 'PROCESSING' ? 'bg-info' : 
+                                   (order.status == 'SHIPPED' ? 'bg-warning' : 
+                                   (order.status == 'DELIVERED' ? 'bg-success' : 
+                                   (order.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary'))))}"
+                    th:text="${order.status}"
+                  >
+                    NEW
+                  </span>
+                </td>
+                <td class="text-center" data-label="Items">
+                  <span class="items-count" th:text="${order.itemCount}"
+                    >0</span
                   >
                 </td>
-                <td class="text-center" th:text="${order.itemCount}">0</td>
-                <td
-                  class="text-end"
-                  th:text="${order.total != null ? #numbers.formatDecimal(order.total,0,'COMMA',2,'POINT') : '0.00'}"
-                >
-                  $0.00
+                <td class="text-end" data-label="Total">
+                  <span
+                    class="order-total"
+                    th:text="${order.total != null ? #numbers.formatDecimal(order.total,0,'COMMA',2,'POINT') : '0.00'}"
+                  >
+                    0.00
+                  </span>
                 </td>
-                <td class="text-end">
+                <td class="text-end" data-label="Action">
                   <a
-                    class="btn btn-sm btn-outline-secondary"
+                    class="btn-view-order"
                     th:href="@{'/order/detail/' + ${order.id}}"
-                    >View</a
                   >
+                    View Details
+                  </a>
                 </td>
               </tr>
             </tbody>
