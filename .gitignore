@@ -35,3 +35,7 @@ build/
 
 
 *.env
+
+*.key
+
+*.pem
